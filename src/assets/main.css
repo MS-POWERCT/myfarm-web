@@ -1,0 +1,813 @@
+@import './base.css';
+
+:root {
+  /* 基础颜色 */
+  --white: #ffffff;
+  --gray100: #f8f9fa;
+  --gray300: #e5e7eb;
+  --gray400: #ededed;
+  --gray500: #999;
+  --black: #000000;
+  --black100: #111111;
+  --black300: #333333;
+  --black500: #555555;
+
+  /* 主题色 */
+  --primary: #1989fa;
+  --pink: #e091bf;
+  --orange: #ff9800;
+  --yellow-gold: #ecbf44;
+  --green: #5dc361;
+  --red: #ef4444;
+
+  /* 几个浅色 */
+  --primary100: #afddf2;
+  --pink100: #f9d4ea;
+  --orange100: #fce7c9;
+  --yellow-gold100: #f5e8b0;
+  --green100: #cfef98;
+  --red100: #fddcdd;
+
+
+
+  /* farm使用到的颜色 */
+  --land-level-red: #ff4d4f;
+  --land-level-gold: #ffd700;
+
+  /* github 贡献表颜色 */
+  --github-contribution-color: #f0f2f5;
+  --github-contribution-color-1: #aceebb;
+  --github-contribution-color-2: #4ac36b;
+  --github-contribution-color-3: #2ea44b;
+  --github-contribution-color-4: #126329;
+
+
+  /* 像素值 */
+  --px-2: 2px;
+  --px-4: 4px;
+  --px-6: 6px;
+  --px-8: 8px;
+  --px-10: 10px;
+  --px-12: 12px;
+  --px-14: 14px;
+  --px-16: 16px;
+  --px-18: 18px;
+  --px-20: 20px;
+  --px-22: 22px;
+  --px-24: 24px;
+  --px-26: 26px;
+  --px-28: 28px;
+  --px-30: 30px;
+  --px-32: 32px;
+  --px-34: 34px;
+  --px-36: 36px;
+  --px-9999: 9999px;
+
+  /* rem 值 */
+  --rem-1: 0.1rem;
+  --rem-2: 0.2rem;
+  --rem-3: 0.3rem;
+  --rem-4: 0.4rem;
+  --rem-5: 0.5rem;
+  --rem-6: 0.6rem;
+  --rem-7: 0.7rem;
+  --rem-8: 0.8rem;
+  --rem-9: 0.9rem;
+  --rem-10: 1.0rem;
+  --rem-12: 1.2rem;
+  --rem-14: 1.4rem;
+  --rem-16: 1.6rem;
+  --rem-18: 1.8rem;
+  --rem-20: 2.0rem;
+  --rem-22: 2.2rem;
+  --rem-24: 2.4rem;
+  --rem-26: 2.6rem;
+  --rem-28: 2.8rem;
+  --rem-30: 3.0rem;
+  --rem-32: 3.2rem;
+  --rem-34: 3.4rem;
+  --rem-36: 3.6rem;
+  --rem-40: 4.0rem;
+  --rem-44: 4.4rem;
+  --rem-48: 4.8rem;
+  --rem-52: 5.2rem;
+  --rem-56: 5.6rem;
+  --rem-60: 6.0rem;
+  --rem-64: 6.4rem;
+  --rem-68: 6.8rem;
+  --rem-72: 7.2rem;
+  --rem-76: 7.6rem;
+  --rem-80: 8.0rem;
+  --rem-84: 8.4rem;
+  --rem-88: 8.8rem;
+  --rem-92: 9.2rem;
+  --rem-96: 9.6rem;
+  --rem-100: 10rem;
+
+  /* 数字值 */
+  --number-100: 100;
+  --number-200: 200;
+  --number-300: 300;
+  --number-400: 400;
+  --number-500: 500;
+  --number-600: 600;
+  --number-700: 700;
+  --number-800: 800;
+  --number-900: 900;
+
+  /* 圆角 */
+  --radius-4: 4px;
+  --radius-8: 8px;
+  --radius-12: 12px;
+  --radius-16: 16px;
+  --radius-20: 20px;
+  --radius-24: 24px;
+  --radius-9999: 9999px;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+  fill: currentColor;
+  overflow: hidden;
+}
+
+#app {
+  margin: 0 auto;
+  font-weight: normal;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+/* 隐藏滚动条但保持滚动功能 */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: none;
+}
+
+/* IE and Edge */
+* {
+  -ms-overflow-style: none;
+}
+
+/* iconfont Symbol 方式通用样式 */
+.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
+
+
+/* 强制6大类 */
+/*
+  1. 字体大小
+  2. 字体颜色
+  3. 背景颜色
+  4. 圆角 - radius
+  5. 边距 - margin
+  6. 边框 - border
+*/
+/* 字体大小 */
+.text-8 {
+  font-size: var(--rem-6);
+}
+.text-10 {
+  font-size: var(--rem-7);
+}
+.text-12 {
+  font-size: var(--rem-8);
+}
+.text-14 {
+  font-size: var(--rem-9);
+}
+.text-16 {
+  font-size: var(--rem-10);
+}
+.text-20 {
+  font-size: var(--rem-12);
+}
+.text-24 {
+  font-size: var(--rem-14);
+}
+.text-28 {
+  font-size: var(--rem-16);
+}
+.text-32 {
+  font-size: var(--rem-18);
+}
+.font-regular {
+  font-weight: var(--number-500);
+}
+.font-bold {
+  font-weight: var(--number-700);
+}
+.line-through {
+  text-decoration: line-through;
+}
+
+/* 文本颜色 */
+
+.text-white {
+  color: var(--white);
+}
+.text-gray100 {
+  color: var(--gray100);
+}
+.text-gray300 {
+  color: var(--gray300);
+}
+.text-gray500 {
+  color: var(--gray500);
+}
+.text-black {
+  color: var(--black);
+}
+.text-black100 {
+  color: var(--black100);
+}
+.text-black300 {
+  color: var(--black300);
+}
+.text-black500 {
+  color: var(--black500);
+}
+.text-primary {
+  color: var(--primary);
+}
+.text-primary100 {
+  color: var(--primary100);
+}
+.text-pink {
+  color: var(--pink);
+}
+.text-orange {
+  color: var(--orange);
+}
+.text-yellow-gold {
+  color: var(--yellow-gold);
+}
+.text-green {
+  color: var(--green);
+}
+.text-green100 {
+  color: var(--green100);
+}
+
+
+/* 背景色 */
+.bg-black {
+  background-color: var(--black);
+}
+.bg-black100 {
+  background-color: var(--black100);
+}
+.bg-black300 {
+  background-color: var(--black300);
+}
+.bg-black500 {
+  background-color: var(--black500);
+}
+.bg-white {
+  background-color: var(--white);
+}
+.bg-gray100 {
+  background-color: var(--gray100);
+}
+.bg-gray300 {
+  background-color: var(--gray300);
+}
+.bg-gray500 {
+  background-color: var(--gray500);
+}
+.bg-primary {
+  background-color: var(--primary);
+}
+.bg-primary100 {
+  background-color: var(--primary100);
+}
+.bg-pink {
+  background-color: var(--pink);
+}
+.bg-pink100 {
+  background-color: var(--pink100);
+}
+.bg-orange {
+  background-color: var(--orange);
+}
+.bg-orange100 {
+  background-color: var(--orange100);
+}
+.bg-yellow-gold {
+  background-color: var(--yellow-gold);
+}
+.bg-yellow-gold100 {
+  background-color: var(--yellow-gold100);
+}
+.bg-green {
+  background-color: var(--green);
+}
+.bg-green100 {
+  background-color: var(--green100);
+}
+
+/* 圆角 */
+.radius-4 {
+  border-radius: var(--radius-4);
+}
+
+.radius-8 {
+  border-radius: var(--radius-8);
+}
+
+.radius-12 {
+  border-radius: var(--radius-12);
+}
+
+.radius-16 {
+  border-radius: var(--radius-16);
+}
+.radius-20 {
+  border-radius: var(--radius-20);
+}
+.radius-24 {
+  border-radius: var(--radius-24);
+}
+
+.radius-9999 {
+  border-radius: var(--radius-9999);
+}
+.radius-bottom-12 {
+  border-radius: 0 0 var(--radius-12) var(--radius-12);
+}
+
+
+/* 边距 - margin */
+.m-2 {
+  margin: var(--px-2);
+}
+
+.m-4 {
+  margin: var(--px-4);
+}
+
+.m-6 {
+  margin: var(--px-6);
+}
+
+.m-8 {
+  margin: var(--px-8);
+}
+
+.m-10 {
+  margin: var(--px-10);
+}
+
+.m-12 {
+  margin: var(--px-12);
+}
+
+.m-16 {
+  margin: var(--px-16);
+}
+
+.mt-2 {
+  margin-top: var(--px-2);
+}
+
+.mt-4 {
+  margin-top: var(--px-4);
+}
+
+.mt-6 {
+  margin-top: var(--px-6);
+}
+
+.mt-8 {
+  margin-top: var(--px-8);
+}
+.mt-10 {
+  margin-top: var(--px-10);
+}
+
+.mt-12 {
+  margin-top: var(--px-12);
+}
+.mt-16 {
+  margin-top: var(--px-16);
+}
+
+.mb-2 {
+  margin-bottom: var(--px-2);
+}
+
+.mb-4 {
+  margin-bottom: var(--px-4);
+}
+
+.mb-6 {
+  margin-bottom: var(--px-6);
+}
+
+.mb-8 {
+  margin-bottom: var(--px-8);
+}
+.mb-10 {
+  margin-bottom: var(--px-10);
+}
+.mb-12 {
+  margin-bottom: var(--px-12);
+}
+
+
+.ml-2 {
+  margin-left: var(--px-2);
+}
+
+.ml-4 {
+  margin-left: var(--px-4);
+}
+
+.ml-6 {
+  margin-left: var(--px-6);
+}
+
+.ml-8 {
+  margin-left: var(--px-8);
+}
+
+.ml-10 {
+  margin-left: var(--px-10);
+}
+
+.ml-12 {
+  margin-left: var(--px-12);
+}
+
+
+.mr-2 {
+  margin-right: var(--px-2);
+}
+
+.mr-4 {
+  margin-right: var(--px-4);
+}
+
+.mr-6 {
+  margin-right: var(--px-6);
+}
+
+.mr-8 {
+  margin-right: var(--px-8);
+}
+
+.mr-12 {
+  margin-right: var(--px-12);
+}
+
+.mr-16 {
+  margin-right: var(--px-16);
+}
+
+.mr-20 {
+  margin-right: var(--px-20);
+}
+
+.mr-24 {
+  margin-right: var(--px-24);
+}
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mx-2 {
+  margin-left: var(--px-2);
+  margin-right: var(--px-2);
+}
+
+.mx-4 {
+  margin-left: var(--px-4);
+  margin-right: var(--px-4);
+}
+
+.mx-6 {
+  margin-left: var(--px-6);
+  margin-right: var(--px-6);
+}
+
+.mx-8 {
+  margin-left: var(--px-8);
+  margin-right: var(--px-8);
+}
+
+.my-2 {
+  margin-top: var(--px-2);
+  margin-bottom: var(--px-2);
+}
+
+.my-4 {
+  margin-top: var(--px-4);
+  margin-bottom: var(--px-4);
+}
+
+.my-6 {
+  margin-top: var(--px-6);
+  margin-bottom: var(--px-6);
+}
+
+.my-8 {
+  margin-top: var(--px-8);
+  margin-bottom: var(--px-8);
+}
+
+.my-12 {
+  margin-top: var(--px-12);
+  margin-bottom: var(--px-12);
+}
+.my-16 {
+  margin-top: var(--px-16);
+  margin-bottom: var(--px-16);
+}
+
+/* 边距 - padding */
+.p-2 {
+  padding: var(--px-2);
+}
+.p-4 {
+  padding: var(--px-4);
+}
+.p-6 {
+  padding: var(--px-6);
+}
+.p-8 {
+  padding: var(--px-8);
+}
+.p-10 {
+  padding: var(--px-10);
+}
+.p-12 {
+  padding: var(--px-12);
+}
+.p-16 {
+  padding: var(--px-16);
+}
+.p-20 {
+  padding: var(--px-20);
+}
+.p-24 {
+  padding: var(--px-24);
+}
+
+.pt-2 {
+  padding-top: var(--px-2);
+}
+
+.pt-4 {
+  padding-top: var(--px-4);
+}
+
+.pt-6 {
+  padding-top: var(--px-6);
+}
+
+.pt-8 {
+  padding-top: var(--px-8);
+}
+.pb-2 {
+  padding-bottom: var(--px-2);
+}
+
+.pb-4 {
+  padding-bottom: var(--px-4);
+}
+
+.pb-6 {
+  padding-bottom: var(--px-6);
+}
+
+.pb-8 {
+  padding-bottom: var(--px-8);
+}
+
+
+.pl-2 {
+  padding-left: var(--px-2);
+}
+
+.pl-4 {
+  padding-left: var(--px-4);
+}
+
+.pl-6 {
+  padding-left: var(--px-6);
+}
+
+.pl-8 {
+  padding-left: var(--px-8);
+}
+
+.pr-2 {
+  padding-right: var(--px-2);
+}
+
+.pr-4 {
+  padding-right: var(--px-4);
+}
+
+.pr-6 {
+  padding-right: var(--px-6);
+}
+
+.pr-8 {
+  padding-right: var(--px-8);
+}
+
+.px-2 {
+  padding-left: var(--px-2);
+  padding-right: var(--px-2);
+}
+
+.px-4 {
+  padding-left: var(--px-4);
+  padding-right: var(--px-4);
+}
+
+.px-6 {
+  padding-left: var(--px-6);
+  padding-right: var(--px-6);
+}
+
+.px-8 {
+  padding-left: var(--px-8);
+  padding-right: var(--px-8);
+}
+.px-10 {
+  padding-left: var(--px-10);
+  padding-right: var(--px-10);
+}
+.px-12 {
+  padding-left: var(--px-12);
+  padding-right: var(--px-12);
+}
+.px-16 {
+  padding-left: var(--px-16);
+  padding-right: var(--px-16);
+}
+
+
+
+.py-2 {
+  padding-top: var(--px-2);
+  padding-bottom: var(--px-2);
+}
+
+.py-4 {
+  padding-top: var(--px-4);
+  padding-bottom: var(--px-4);
+}
+
+.py-6 {
+  padding-top: var(--px-6);
+  padding-bottom: var(--px-6);
+}
+
+.py-8 {
+  padding-top: var(--px-8);
+  padding-bottom: var(--px-8);
+}
+.py-10 {
+  padding-top: var(--px-10);
+  padding-bottom: var(--px-10);
+}
+.py-12 {
+  padding-top: var(--px-12);
+  padding-bottom: var(--px-12);
+}
+.py-16 {
+  padding-top: var(--px-16);
+  padding-bottom: var(--px-16);
+}
+
+
+
+/* 边框 - border */
+.border {
+  border: 1px solid var(--gray600);
+}
+.border-none {
+  border: none;
+}
+
+
+/* 文本对齐 */
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-justify {
+  text-align: justify;
+}
+
+
+/* 弹性布局 */
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
+
+.items-start {
+  align-items: flex-start;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.items-end {
+  align-items: flex-end;
+}
+
+.justify-start {
+  justify-content: flex-start;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-around {
+  justify-content: space-around;
+}
+
+.justify-evenly {
+  justify-content: space-evenly;
+}
+
+.gap-1 {
+  gap: var(--rem-1);
+}
+
+.gap-2 {
+  gap: var(--rem-2);
+}
+
+.gap-3 {
+  gap: var(--rem-3);
+}
+
+/* 白色边框 */
+.border-white {
+  border: 2px solid var(--white);
+}
+
+
+/* 变成块元素 */
+.inline-block {
+  display: inline-block;
+}
+
+.block {
+  display: block;
+}
+
+.hidden {
+  display: none;
+}
