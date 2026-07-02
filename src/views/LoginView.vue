@@ -8,10 +8,10 @@
       <div class="sub-title">登录账号</div>
 
       <div class="mode-row">
+        <span class="mode-item" :class="{ active: loginMode === 'email_password' }"
+          @click="setLoginMode('email_password')">邮箱登录</span>
         <span class="mode-item" :class="{ active: loginMode === 'email_code' }"
           @click="setLoginMode('email_code')">邮箱验证码</span>
-        <span class="mode-item" :class="{ active: loginMode === 'email_password' }"
-          @click="setLoginMode('email_password')">邮箱+密码</span>
         <span v-if="web3Support.supported" class="mode-item" :class="{ active: loginMode === 'web3' }"
           @click="setLoginMode('web3')">Web3</span>
       </div>
@@ -152,7 +152,7 @@ onMounted(() => {
 }
 
 .mode-item.active {
-  color: var(--white);
+  color: var(--primary100);
   font-weight: bold;
 }
 

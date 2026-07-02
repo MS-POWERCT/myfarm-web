@@ -216,7 +216,7 @@
               <div class="item-count">x{{ fruit.num }}</div>
               <div class="item-meta">
                 <span class="text-gray">售价: {{ fruit.handbook.selling_price }}{{ fruit.handbook.selling_asset_name
-                }}</span>
+                  }}</span>
               </div>
               <div v-if="isHaveDeliveryTool" class="delivery-btn" @click.stop="clickDelivery(fruit)">
                 <IconifyIcon icon="mdi:truck-fast-outline" width="14" />
@@ -461,7 +461,7 @@ const tabs = [
   { key: 'fruit', name: '仓库', icon: 'mdi:warehouse' },
   { key: 'upgrade', name: '升级', icon: 'mdi:trending-up' },
   { key: 'market', name: '集市', icon: 'mdi:storefront-outline' },
-  { key: 'building', name: '建筑', icon: 'mdi:castle-outline' },
+  { key: 'building', name: '建筑', icon: 'mdi:storefront-outline' },
   { key: 'delivery', name: '配送', icon: 'mdi:truck-outline' },
 ]
 
@@ -1281,9 +1281,10 @@ onUnmounted(() => {
 }
 
 .delivery-panel {
+  /* 底部配送面板 */
   position: fixed;
-  left: 12px;
-  top: 200px;
+  left: 10%;
+  bottom: 10px;
   z-index: 100;
   display: flex;
   flex-direction: column;
@@ -1645,12 +1646,15 @@ onUnmounted(() => {
 }
 
 .delivery-btn {
-  position: absolute;
   bottom: 4px;
   right: 4px;
   font-size: 10px;
   color: #06b6d4;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 4px;
 }
 
 .delivery-float {
@@ -1673,9 +1677,8 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 8px;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .float-item:hover {

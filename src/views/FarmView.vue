@@ -7,14 +7,13 @@
         <IconifyIcon icon="basil:logout-solid" width="12" /> 退出登录
       </div>
       <div>
-        <span @click="router.push('/userSettings/statistics')">[修改信息]</span>&nbsp;
+        <span class="clickable text-primary100" @click="router.push('/userSettings/statistics')">[修改信息]</span>&nbsp;
         <span>
           {{ userName }} -
           {{ globalStore.FARM_NAME }}
         </span>
       </div>
     </div>
-
 
     <!-- 状态栏 -->
     <div class="status-bar">
@@ -41,8 +40,6 @@
       </div>
     </div>
 
-    <!-- 通知栏 -->
-    <van-notice-bar v-if="notice" scrollable background="transparent" color="#fff" :text="notice" class="mb-8" />
 
     <!-- 配送状态浮动面板 -->
     <div v-if="hasDeliveryingTools.length > 0" class="delivery-float-panel">
@@ -57,8 +54,7 @@
           </div>
           <div class="float-tool-reward">
             <span class="text-gray500">收益：</span>
-            <span>{{ tool.delivery_record.amount }}{{ tool.delivery_record.handbook?.selling_asset_name || '灵石'
-            }}</span>
+            <span>{{ tool.delivery_record.amount }}{{ tool.delivery_record.handbook?.selling_asset_name }}</span>
           </div>
           <div v-if="tool.delivery_record.status === 0" class="float-tool-time">
             <van-count-down :time="getDeliveryTime(tool.delivery_record.end_at)" format="mm:ss" class="text-primary100"
@@ -68,12 +64,51 @@
       </div>
     </div>
 
+
+
+    <!-- 集市任务区域 -->
+    <div class="market-section" :key="JSON.stringify(fruitList)">
+      <div class="market-tasks">
+        <div v-for="item in marketList" :key="item.id" class="task-card">
+          <div class="task-rewards">
+            <span class="reward-item exp">经验 +{{ item.farm_task.reward_exp }}</span>
+            <span class="reward-item gold">{{ item.farm_task.reward_gold }}</span>
+          </div>
+          <div class="task-items">
+            <div v-for="(status, idx) in getRequirementStatus(item)" :key="idx"
+              :class="['item-box', status.isMet ? 'done' : 'need']">
+              <IconFont :name="handbooks[status.handbook_id].icon" width="24" />
+              <IconifyIcon v-if="status.isMet" icon="mdi:check-circle" width="16" class="check-mark" />
+              <span v-else class="item-num">{{ status.current }}/{{ status.required }}</span>
+            </div>
+          </div>
+          <div class="task-npc">
+            <!-- <div class="npc-circle">
+              <IconifyIcon icon="mdi:account" width="22" />
+            </div> -->
+            <span class="npc-label">{{ item.farm_task.npc_name }}</span>
+          </div>
+          <div class="task-footer">
+            <span v-if="checkTaskRequirements(item)" @click="deliverTask(item)" class="submit-btn">交付</span>
+            <span v-else class="submit-btn disabled">货物不足</span>
+          </div>
+        </div>
+        <div v-if="marketList.length === 0" class="no-tasks">
+          <span>暂无任务</span>
+        </div>
+      </div>
+    </div>
+
+
     <!-- 土地区域 -->
     <div class="land-section">
       <div class="section-tabs">
-        <span class="tab-btn active">我的土地</span>
+        <transition name="fade" mode="out-in">
+          <van-notice-bar v-if="showNotice" key="notice" scrollable background="transparent" color="#fff" :text="notice"
+            class="notice-bar" />
+          <span v-else key="tab" class="tab-btn active">我的土地</span>
+        </transition>
         <!-- <span class="tab-btn">我的池塘</span> -->
-
       </div>
 
       <!-- 土地列表 -->
@@ -106,13 +141,9 @@
     <div class="tool-bar">
       <span class="tool-btn" @click="init()">刷新</span>
 
-      <!-- 如果有种植的土地状态=1或者3就出现一健铲除按钮 -->
-      <span class="tool-btn" @click="clearAll()">一健铲除</span>
-      <!-- 一键收获 -->
-      <span class="tool-btn" @click="harvestAll()">一键收获</span>
-
-      <!-- 如果种子被选择后出现一健种植按钮 -->
-      <span v-if="isChoiceMode" class="tool-btn" @click="doPlantAll()">一键种植</span>
+      <span v-if="hasClearableLands" class="tool-btn" @click="clearAll()">一健铲除</span>
+      <span v-if="hasHarvestableLands" class="tool-btn" @click="harvestAll()">一键收获</span>
+      <span v-if="isChoiceMode && hasEmptyLands" class="tool-btn" @click="doPlantAll()">一键种植</span>
 
     </div>
 
@@ -123,14 +154,12 @@
           背包种子
         </span>
         <span class="function-tab" :class="{ active: currentFunction === 'fruit' }" @click="switchTab('fruit')">
-          仓库
+          我的仓库
         </span>
         <span class="function-tab" :class="{ active: currentFunction === 'shop' }" @click="switchTab('shop')">
           种子商店
         </span>
-        <span class="function-tab" :class="{ active: currentFunction === 'market' }" @click="switchTab('market')">
-          集市
-        </span>
+
         <span class="function-tab" :class="{ active: currentFunction === 'building' }" @click="switchTab('building')">
           特殊建筑
         </span>
@@ -163,11 +192,12 @@
             <span style="width: 120px;">
               <IconFont :name="seed.handbook.icon" />
               {{ seed.handbook.name }}
-              x {{ seed.num }}
+              <span>{{ seed.handbook.quarter }}季</span>
             </span>
-            <span>{{ seed.handbook.quarter }}季</span>&nbsp;&nbsp;
+            <span>x {{ seed.num }}</span>
             <!-- 种植模式下显示种植按钮 -->
-            <span @click="doChoice(seed.handbook_id, seed.handbook.name)">[选择种植]</span>
+            <span class="clickable text-primary100"
+              @click="doChoice(seed.handbook_id, seed.handbook.name)">[选择种植]</span>
           </div>
         </div>
         <!-- 空状态提示 -->
@@ -207,14 +237,14 @@
         </div>
       </div>
 
-      <!-- 仓库 -->
+      <!-- 我的仓库 -->
       <div v-if="currentFunction === 'fruit'" class="function-list">
         <div class="text-center">
-          <span class="text-gray500">仓库大小 {{ warehouseUse }} / {{ warehouseSize }}</span>&nbsp;&nbsp;&nbsp;
+          <span class="text-gray500">我的仓库大小 {{ warehouseUse }} / {{ warehouseSize }}</span>&nbsp;&nbsp;&nbsp;
           <span v-if="nextExtendPrice > 0" class="text-primary100" @click="extendWarehouse">
             [扩充{{ nextExtendSize }}个位置{{ nextExtendPrice }}灵石]
           </span>
-          <span v-else class="text-gray500">[仓库最大容量]</span>
+          <span v-else class="text-gray500">[我的仓库最大容量]</span>
         </div>
         <div v-if="fruitList.length > 0">
           <div v-for="fruit in fruitList" :key="fruit.name" class="function-item">
@@ -245,75 +275,22 @@
           </div>
         </div>
         <div v-else class="empty-tip">
-          仓库里什么都没有哦
+          我的仓库里什么都没有哦
         </div>
       </div>
 
       <!-- 土地升级内容 -->
       <div v-if="currentFunction === 'upgrade'" class="function-list">
         <div v-for="upgrade in landUpgradeInfo" :key="upgrade.id" class="upgrade-item">
-          <span class="upgrade-name">{{ upgrade.name }}
-
-          </span>
           <span class="upgrade-desc">{{ upgrade.desc }} &nbsp;
             <IconifyIcon icon="hugeicons:land-plot" width="14" />
           </span>
-          <span class="upgrade-cost">{{ upgrade.price }}灵石</span>
+          <span>等级：Lv{{ upgrade.required_level }}</span>
+          <span class="upgrade-cost">灵石：{{ upgrade.price }}</span>
           <span class="upgrade-btn" @click="upgradeLand(upgrade)">{{ upgrade.bottom }}</span>
         </div>
         <div class="empty-tip">
           暂无升级信息
-        </div>
-      </div>
-
-      <!-- 集市内容 -->
-      <div v-if="currentFunction === 'market'" class="function-list">
-        <div class="text-center text-gray500">
-          集市刷新倒计时
-          <van-count-down class="inline-block text-12 text-gray500" :time="marketRefreshTime" format="HH:mm:ss"
-            @finish="onMarketRefreshFinish" />
-        </div>
-
-        <!-- 目前解锁的集市订单 code... 这里可以显示当前解锁的集市订单 -->
-        <!-- <div class="market-title">目前解锁的集市订单</div> -->
-        <div v-if="marketList.length > 0">
-          <div v-for="item in marketList" :key="item.id" class="market-item">
-            <div>
-              <span>[{{ item.farm_task.npc_name }}]</span>&nbsp;
-              <span>{{ item.farm_task.name }}</span>&nbsp;
-              <IconifyIcon icon="streamline-ultimate-color:task-list-pin" width="18" />
-              <span class="market-quality mr-4 mt-4" :class="`market-quality-${item.farm_task.quality_type}`">[{{
-                item.farm_task.quality_type_name }}]</span>
-            </div>
-            <div>{{ item.farm_task.description }}</div>
-            <div>
-              <span class="text-gray500">需求：</span>
-              <span v-for="(status, idx) in getRequirementStatus(item)" :key="idx"
-                :class="status.isMet ? 'text-green' : 'text-red'">
-                {{ handbooks[status.handbook_id] ?? '-' }}
-                <span class="text-gray500">(</span>
-                <span :class="status.isMet ? 'text-green' : 'text-red'">{{ status.current }}</span>
-                <span class="text-gray500">/{{ status.required }})</span>&nbsp;
-              </span>
-              <span v-if="checkTaskRequirements(item)" class="task-ready-badge">
-                <IconifyIcon icon="mdi:check-circle" width="12" /> 可交付
-              </span>
-            </div>
-            <div>
-              <span class="text-gray500">奖励：</span>
-              <span>经验 +{{ item.farm_task.reward_exp }}</span>&nbsp;
-              <span>{{ item.farm_task.reward_asset.name }} +{{ item.farm_task.reward_gold }}</span>
-            </div>
-            <div class="task-actions">
-              <span @click="cancelTask(item)" class="text-gray500 task-btn">[放弃]</span>&nbsp;
-              <span v-if="checkTaskRequirements(item)" @click="deliverTask(item)"
-                class="text-green task-btn deliver-ready">[交付]</span>
-              <span v-else class="text-gray500 task-btn disabled">[货物不足]</span>
-            </div>
-          </div>
-        </div>
-        <div v-else class="empty-tip">
-          暂无集市订单
         </div>
       </div>
 
@@ -376,25 +353,6 @@
         </div>
       </div>
 
-      <!-- 工具内容 -->
-      <!-- <div v-if="currentFunction === 'tool'" class="function-list">
-        <div class="tool-item">
-          <span class="tool-name">快速播种</span>
-          <span class="tool-desc">一键播种所有空地</span>
-        </div>
-        <div class="tool-item">
-          <span class="tool-name">一键铲除</span>
-          <span class="tool-desc">铲除所有枯萎作物</span>
-        </div>
-        <div class="tool-item">
-          <span class="tool-name">快速收获</span>
-          <span class="tool-desc">一键收获所有成熟作物</span>
-        </div>
-        <div class="tool-item">
-          <span class="tool-name">刷新数据</span>
-          <span class="tool-desc">重新获取农场数据</span>
-        </div>
-      </div> -->
     </div>
 
     <!-- 农场日志区域 -->
@@ -443,6 +401,23 @@ const userStore = useUserStore()
 
 // 通知栏
 const notice = ref('【公告】欢迎来到纯文字农场，每日签到世界树可获得经验和灵石，集市任务奖励丰厚哦')
+const showNotice = ref(false)
+
+const NOTICE_STORAGE_KEY = 'farm_notice_date'
+
+const shouldShowNotice = () => {
+  const today = new Date().toDateString()
+  const lastShown = localStorage.getItem(NOTICE_STORAGE_KEY)
+  return lastShown !== today
+}
+
+const hideNotice = () => {
+  setTimeout(() => {
+    showNotice.value = false
+    localStorage.setItem(NOTICE_STORAGE_KEY, new Date().toDateString())
+  }, 8000)
+}
+
 
 // 功能标签持久化
 const STORAGE_KEY = 'farm_active_tab'
@@ -455,7 +430,7 @@ const switchTab = (tab) => {
 // 从 localStorage 恢复保存的标签
 const loadSavedTab = () => {
   const saved = localStorage.getItem(STORAGE_KEY)
-  if (saved && ['backpack', 'shop', 'fruit', 'tool', 'market', 'upgrade', 'building', 'delivery'].includes(saved)) {
+  if (saved && ['backpack', 'shop', 'fruit', 'tool', 'upgrade', 'building', 'delivery'].includes(saved)) {
     currentFunction.value = saved
   }
 }
@@ -524,7 +499,7 @@ const selectDeliveryTool = async (tool) => {
     showToast({ message: `开始配送${selectedFruit.value.handbook.name}！`, type: 'success' })
     showDeliveryPopup.value = false
     selectedFruit.value = null
-    // 刷新配送工具列表和仓库
+    // 刷新配送工具列表和我的仓库
     await farmStore.getDeliveryToolList()
     await farmStore.fetchWarehouseList('fruit')
   } catch (error) {
@@ -535,37 +510,6 @@ const selectedLandId = ref(null)
 const isChoiceMode = ref(false)
 const selectedHandbookId = ref(null)
 const selectedHandbookName = ref(null)
-
-// 获取距离下一次集市刷新的剩余时间（毫秒）
-const getMarketRefreshTime = () => {
-  const now = new Date()
-  const refreshHours = [12, 24]
-  let minDiff = Infinity
-
-  for (const hour of refreshHours) {
-    const target = new Date()
-    if (hour === 24) {
-      target.setDate(target.getDate() + 1)
-      target.setHours(0, 0, 0, 0)
-    } else {
-      target.setHours(hour, 0, 0, 0)
-    }
-    const diff = target.getTime() - now.getTime()
-    if (diff > 0 && diff < minDiff) {
-      minDiff = diff
-    }
-  }
-
-  return minDiff > 0 ? minDiff : 0
-}
-
-const marketRefreshTime = ref(getMarketRefreshTime())
-
-const onMarketRefreshFinish = async () => {
-  await farmStore.fetchMarketList()
-  marketRefreshTime.value = getMarketRefreshTime()
-}
-
 
 //土地时间计算
 const getTime = (time) => {
@@ -744,6 +688,18 @@ const hasDeliveryingTools = computed(() => {
   return deliveryTools.value.filter(tool => tool.is_delivery === 1 && tool.delivery_record)
 })
 
+const hasClearableLands = computed(() => {
+  return lands.value.some(l => l.status === 3)
+})
+
+const hasHarvestableLands = computed(() => {
+  return lands.value.some(l => l.status === 2)
+})
+
+const hasEmptyLands = computed(() => {
+  return lands.value.some(l => l.status === 0)
+})
+
 // 点击世界树获得祝福
 const clickWorldTree = async () => {
   try {
@@ -759,7 +715,7 @@ const clickWorldTree = async () => {
   }
 }
 
-// 检查仓库货物是否满足任务需求
+// 检查我的仓库货物是否满足任务需求
 const checkTaskRequirements = (task) => {
   if (!task.farm_task?.task_need || !fruitList.value || fruitList.value.length === 0) {
     return false
@@ -814,7 +770,7 @@ const deliverTask = async (task) => {
     await addExp(task.farm_task.reward_exp, '任务')
     await updateAsset(task.farm_task.reward_asset_id, task.farm_task.reward_gold, 'add')
 
-    // 刷新仓库
+    // 刷新我的仓库
     await farmStore.fetchWarehouseList('fruit')
 
     showToast({ message: '任务完成！', type: 'success' })
@@ -824,15 +780,15 @@ const deliverTask = async (task) => {
 }
 
 // 放弃集市任务
-const cancelTask = async (task) => {
-  try {
-    // 执行放弃
-    await farmStore.cancelTask(task.id)
-    showToast({ message: '已放弃任务', type: 'info' })
-  } catch (error) {
-    showToast({ message: '操作失败' + error, type: 'error' })
-  }
-}
+// const cancelTask = async (task) => {
+//   try {
+//     // 执行放弃
+//     await farmStore.cancelTask(task.id)
+//     showToast({ message: '已放弃任务', type: 'info' })
+//   } catch (error) {
+//     showToast({ message: '操作失败' + error, type: 'error' })
+//   }
+// }
 
 // 返回土地名称
 const landName = (land, index) => {
@@ -1032,19 +988,21 @@ const clearAll = async () => {
 // 点击收获
 const harvest = async (land) => {
 
-  // 回跳到仓库tab
+  // 回跳到我的仓库tab
   // switchTab('fruit')
 
   try {
 
     await farmStore.LandHarvest(land.id)
 
-    await farmStore.fetchWarehouseList('fruit') // 初始化水果仓库信息
+    await farmStore.fetchWarehouseList('fruit') // 刷新仓库信息
 
     // 提示收获成功
     showToast({ message: `收获成功，获得${land.residue_output}个${land.handbook.name}`, type: 'success' })
     // 增加经验
     await addExp(land.handbook.quarter_exp, `收获${land.handbook.name}`)
+    // 刷新集市任务状态
+    await farmStore.fetchMarketList()
   } catch (error) {
     showToast({ message: error || '收获失败', type: 'error' })
   }
@@ -1069,6 +1027,9 @@ const harvestAll = async () => {
 
     // 提示收获成功
     showToast({ message: `一键收获成功，获得${totalExp}点经验`, type: 'success' })
+    // 刷新仓库和集市任务状态
+    await farmStore.fetchWarehouseList('fruit')
+    await farmStore.fetchMarketList()
   } catch (error) {
     showToast({ message: error || '一键收获失败', type: 'error' })
   }
@@ -1105,6 +1066,13 @@ const buy = async (item) => {
 // 土地升级
 const upgradeLand = async (upgrade) => {
   try {
+
+    // 判断等级是否满足
+    if (levelId.value < upgrade.required_level) {
+      showToast({ message: `需要达到 Lv.${upgrade.required_level} 才能升级`, type: 'error' })
+      return
+    }
+
     // 先扣除金币
     const deducted = await updateAsset(1, upgrade.price, 'deduct')
     if (!deducted) {
@@ -1123,7 +1091,7 @@ const upgradeLand = async (upgrade) => {
   }
 }
 
-// 扩充仓库
+// 扩充我的仓库
 const extendWarehouse = async () => {
   try {
     // 先扣除金币
@@ -1133,15 +1101,15 @@ const extendWarehouse = async () => {
     }
 
     await farmStore.extendWarehouse()
-    showToast({ message: `仓库扩充成功，新增${nextExtendSize.value}个位置`, type: 'success' })
+    showToast({ message: `我的仓库扩充成功，新增${nextExtendSize.value}个位置`, type: 'success' })
 
-    // 刷新仓库信息
+    // 刷新我的仓库信息
     await farmStore.fetchFarmInfo()
     await farmStore.fetchWarehouseList('fruit')
   } catch (error) {
     // 失败时回滚金币
     await updateAsset(1, nextExtendPrice.value, 'add')
-    showToast({ message: error || '仓库扩充失败', type: 'error' })
+    showToast({ message: error || '我的仓库扩充失败', type: 'error' })
   }
 }
 
@@ -1176,8 +1144,8 @@ const init = async () => {
   await farmStore.fetchFarmInfo() // 初始化农场信息
   await farmStore.fetchLands() // 初始化土地信息
   await farmStore.fetchShops() // 初始化商店信息
-  await farmStore.fetchWarehouseList('seed') // 初始化种子仓库信息
-  await farmStore.fetchWarehouseList('fruit') // 初始化水果仓库信息
+  await farmStore.fetchWarehouseList('seed') // 初始化种子我的仓库信息
+  await farmStore.fetchWarehouseList('fruit') // 初始化水果我的仓库信息
   await farmStore.fetchMarketList() // 初始化集市列表信息
   await farmStore.getLandUpgradeInfo() // 初始化土地升级/开垦信息
   await farmStore.getSpecialInfo() // 初始化特殊建筑信息
@@ -1192,6 +1160,10 @@ const logout = async () => {
 
 onMounted(async () => {
   loadSavedTab() // 恢复保存的标签
+  if (shouldShowNotice()) {
+    showNotice.value = true
+    hideNotice()
+  }
   await init()
 })
 
@@ -1216,6 +1188,23 @@ onUnmounted(() => {
 
 .text-red {
   color: var(--red);
+}
+
+.text-primary100 {
+  color: var(--primary100);
+  cursor: pointer;
+}
+
+.text-primary100:hover {
+  text-decoration: underline;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  text-decoration: underline;
 }
 
 .task-ready-badge {
@@ -1288,6 +1277,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 4px;
+  cursor: pointer;
 }
 
 
@@ -1609,8 +1599,6 @@ onUnmounted(() => {
 }
 
 .function-item-active {
-  border-left: 3px solid var(--primary100);
-  padding-left: 8px;
   background: rgba(64, 158, 255, 0.1);
 }
 
@@ -1659,6 +1647,11 @@ onUnmounted(() => {
 .tool-btn {
   color: var(--primary100);
   padding: 5px 10px;
+}
+
+.tool-btn:hover {
+  /* 鼠标指针样式 */
+  cursor: pointer;
 }
 
 
@@ -1735,29 +1728,6 @@ onUnmounted(() => {
   color: var(--primary100);
 }
 
-/* 集市订单样式 */
-.market-item {
-  border-bottom: 1px dashed var(--gray500);
-  padding: 6px;
-  margin-bottom: 4px;
-
-  .market-quality {
-    /* 靠右浮动 */
-    float: right;
-  }
-}
-
-.market-quality-0 {
-  color: var(--gray500);
-}
-
-.market-quality-1 {
-  color: #f6bd16;
-}
-
-.market-quality-2 {
-  color: #e8684a;
-}
 
 
 
@@ -1803,6 +1773,15 @@ onUnmounted(() => {
   color: var(--gray500);
   font-size: 12px;
   flex: 1;
+}
+
+.upgrade-btn {
+  color: var(--primary100);
+  cursor: pointer;
+}
+
+.upgrade-btn:hover {
+  text-decoration: underline;
 }
 
 /* 农场日志区域样式 */
@@ -1953,5 +1932,185 @@ onUnmounted(() => {
 
 :deep(.van-notice-bar) {
   height: 24px;
+}
+
+.notice-bar {
+  width: 100%;
+}
+
+.section-tabs {
+  min-height: 36px;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fade-enter-from {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+/* 集市任务区域 */
+.market-section {
+  margin-bottom: 4px;
+  min-height: 130px;
+}
+
+.market-tasks {
+  padding: 4px 0;
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  min-height: 120px;
+}
+
+.market-tasks::-webkit-scrollbar {
+  display: none;
+}
+
+.task-card {
+  flex-shrink: 0;
+  width: 130px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--gray500);
+  border-radius: 8px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  margin-right: 6px;
+}
+
+.task-rewards {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.reward-item {
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.reward-item.exp {
+  background: rgba(59, 130, 246, 0.3);
+  color: var(--primary100);
+}
+
+.reward-item.gold {
+  background: rgba(251, 191, 36, 0.3);
+  color: #ffd700;
+}
+
+.task-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-bottom: 6px;
+}
+
+.item-box {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  color: var(--white);
+}
+
+.item-box.done {
+  background: rgba(34, 197, 94, 0.2);
+  border: 1px solid var(--green);
+}
+
+.item-box.need {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px dashed var(--gray500);
+  opacity: 0.5;
+}
+
+.check-mark {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  color: var(--green);
+}
+
+.item-num {
+  position: absolute;
+  bottom: -8px;
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.task-npc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.npc-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+}
+
+.npc-label {
+  font-size: 10px;
+  color: var(--gray500);
+  margin-top: 2px;
+}
+
+.task-footer {
+  display: flex;
+  justify-content: center;
+}
+
+.submit-btn {
+  font-size: 12px;
+  padding: 1px 10px;
+  border-radius: 6px;
+  background: rgba(34, 197, 94, 0.2);
+  color: var(--green);
+  border: 1px solid var(--green);
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background: rgba(34, 197, 94, 0.3);
+}
+
+.submit-btn.disabled {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.1);
+  cursor: not-allowed;
+}
+
+.no-tasks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 120px;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 12px;
+  gap: 4px;
 }
 </style>
