@@ -22,6 +22,7 @@ service.interceptors.request.use(
     if(deviceType) {
       config.headers['device_type'] = deviceType
     }
+    config.headers['app_name'] = import.meta.env.VITE_APP_NAME_EN
 
     return config
   },

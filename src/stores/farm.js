@@ -295,62 +295,62 @@
         }
       },
       // 配送工具列表
-      async getDeliveryToolList() {
-        try {
-          this.loading = true
-          const response = await farmApi.getDeliveryToolList() || []
-          this.deliveryToolList = response || []
+      // async getDeliveryToolList() {
+      //   try {
+      //     this.loading = true
+      //     const response = await farmApi.getDeliveryToolList() || []
+      //     this.deliveryToolList = response || []
 
-          // 记录它是否有几个工具里面有一个值is_have为1
-          this.isHaveDeliveryTool = response.some(item => item.is_have === 1)
+      //     // 记录它是否有几个工具里面有一个值is_have为1
+      //     this.isHaveDeliveryTool = response.some(item => item.is_have === 1)
 
-          return response
-        } catch (error) {
-          console.error('获取配送工具列表失败', error)
-          throw error
-        } finally {
-          this.loading = false
-        }
-      },
-      // 购买配送工具
-      async buyDeliveryTool(id) {
-        try {
-          this.loading = true
-          return await farmApi.buyDeliveryTool({ id: id }) || []
-        } catch (error) {
-          console.error('购买配送工具失败', error)
-          throw error
-        } finally {
-          this.loading = false
-        }
-      },
-      // 使用配送工具
-      async useDeliveryTool(tool_id, handbook_id) {
-        try {
-          this.loading = true
-          const response = await farmApi.useDeliveryTool({ tool_id: tool_id, handbook_id: handbook_id }) || []
-          this.deliveryToolList = response || []
-          return response
-        } catch (error) {
-          console.error('使用配送工具失败', error)
-          throw error
-        } finally {
-          this.loading = false
-        }
-      },
-      // 配送结束后更新用户资产和配送记录
-      async updateDeliveryRecord(id) {
-        try {
-          this.loading = true
-          const response = await farmApi.updateDeliveryRecord({ id: id }) || []
-          this.deliveryToolList = response || []
-          return response
-        } catch (error) {
-          console.error('配送结束后更新用户资产和配送记录失败', error)
-          throw error
-        } finally {
-          this.loading = false
-        }
-      },
+      //     return response
+      //   } catch (error) {
+      //     console.error('获取配送工具列表失败', error)
+      //     throw error
+      //   } finally {
+      //     this.loading = false
+      //   }
+      // },
+      // // 购买配送工具
+      // async buyDeliveryTool(id) {
+      //   try {
+      //     this.loading = true
+      //     return await farmApi.buyDeliveryTool({ id: id }) || []
+      //   } catch (error) {
+      //     console.error('购买配送工具失败', error)
+      //     throw error
+      //   } finally {
+      //     this.loading = false
+      //   }
+      // },
+      // // 使用配送工具
+      // async useDeliveryTool(tool_id, handbook_id) {
+      //   try {
+      //     this.loading = true
+      //     const response = await farmApi.useDeliveryTool({ tool_id: tool_id, handbook_id: handbook_id }) || []
+      //     this.deliveryToolList = response || []
+      //     return response
+      //   } catch (error) {
+      //     console.error('使用配送工具失败', error)
+      //     throw error
+      //   } finally {
+      //     this.loading = false
+      //   }
+      // },
+      // // 配送结束后更新用户资产和配送记录
+      // async updateDeliveryRecord(id) {
+      //   try {
+      //     this.loading = true
+      //     const response = await farmApi.updateDeliveryRecord({ id: id }) || []
+      //     this.deliveryToolList = response || []
+      //     return response
+      //   } catch (error) {
+      //     console.error('配送结束后更新用户资产和配送记录失败', error)
+      //     throw error
+      //   } finally {
+      //     this.loading = false
+      //   }
+      // },
     }
   })

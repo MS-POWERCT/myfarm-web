@@ -22,10 +22,6 @@
         <span class="font-bold ml-4">Lv.{{ levelId }}</span>
       </div>
       <div class="status-item">
-        <span class="text-gray500">修为</span>
-        <span class="font-bold ml-4">{{ levelTitle }}</span>
-      </div>
-      <div class="status-item">
         <div>
           <span class="text-gray500">经验</span>
           <span class="font-bold ml-4">{{ exp }}/{{ nextLevelExp }}</span>
@@ -42,7 +38,7 @@
 
 
     <!-- 配送状态浮动面板 -->
-    <div v-if="hasDeliveryingTools.length > 0" class="delivery-float-panel">
+    <!-- <div v-if="hasDeliveryingTools.length > 0" class="delivery-float-panel">
       <div v-for="tool in hasDeliveryingTools" :key="tool.id" class="delivery-float-item">
         <div class="float-tool-icon">
           <IconifyIcon :icon="tool.icon" width="18" />
@@ -62,7 +58,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
 
 
@@ -160,16 +156,16 @@
           种子商店
         </span>
 
-        <span class="function-tab" :class="{ active: currentFunction === 'building' }" @click="switchTab('building')">
-          特殊建筑
-        </span>
+        <!--
         <span class="function-tab" :class="{ active: currentFunction === 'delivery' }" @click="switchTab('delivery')">
           配送工具
-        </span>
+        </span> -->
         <span class="function-tab" :class="{ active: currentFunction === 'upgrade' }" @click="switchTab('upgrade')">
           土地升级
         </span>
-
+        <span class="function-tab" :class="{ active: currentFunction === 'building' }" @click="switchTab('building')">
+          特殊建筑
+        </span>
         <!-- <span class="function-tab" :class="{ active: currentFunction === 'tool' }" @click="switchTab('tool')">
           游戏工具
         </span> -->
@@ -226,9 +222,13 @@
               <span>{{ item.handbook.quarter }}季</span>&nbsp;&nbsp;
               <span>{{ item.handbook.price }}{{ item.handbook.asset.name }}</span>
             </span>
+            <span :class="levelId >= item.handbook.level_id ? '' : 'text-gray500'">
+              等级：{{ item.handbook.level_id }}
+            </span>
             <span>
               <span class="mr-4"></span>
-              <span class="buy-btn" @click="buy(item)">[购买]</span>
+              <span v-if="levelId >= item.handbook.level_id" class="buy-btn" @click="buy(item)">[购买]</span>
+              <span v-else class="text-gray500">等级不足</span>
             </span>
           </div>
         </div>
@@ -242,7 +242,7 @@
         <div class="text-center">
           <span class="text-gray500">我的仓库大小 {{ warehouseUse }} / {{ warehouseSize }}</span>&nbsp;&nbsp;&nbsp;
           <span v-if="nextExtendPrice > 0" class="text-primary100" @click="extendWarehouse">
-            [扩充{{ nextExtendSize }}个位置{{ nextExtendPrice }}灵石]
+            [扩充{{ nextExtendSize }}个位置{{ nextExtendPrice }}金币]
           </span>
           <span v-else class="text-gray500">[我的仓库最大容量]</span>
         </div>
@@ -258,20 +258,19 @@
                 售价: {{ fruit.handbook.selling_price }}{{ fruit.handbook.selling_asset_name }}
               </span>
             </span>
-            <span v-if="isHaveDeliveryTool" class="delivery-trigger">
+            <!-- <span v-if="isHaveDeliveryTool" class="delivery-trigger">
               <span class="text-primary100" @click="clickDelivery(fruit)">[送货]</span>
-              <!-- 配送工具横向浮动列表 -->
-              <div v-if="showDeliveryPopup && selectedFruit?.handbook_id === fruit.handbook_id"
-                class="delivery-tools-float">
-                <span v-for="tool in availableDeliveryTools" :key="tool.id" class="delivery-tool-item"
-                  @click="selectDeliveryTool(tool)">
-                  <IconifyIcon :icon="tool.icon" width="16" />
-                  <span class="float-tip">{{ tool.name }}</span>
-                </span>
-                <span :style="{ width: '100px' }" v-if="availableDeliveryTools.length === 0"
-                  class="text-gray500">[无配送工具]</span>
-              </div>
-            </span>
+            <div v-if="showDeliveryPopup && selectedFruit?.handbook_id === fruit.handbook_id"
+              class="delivery-tools-float">
+              <span v-for="tool in availableDeliveryTools" :key="tool.id" class="delivery-tool-item"
+                @click="selectDeliveryTool(tool)">
+                <IconifyIcon :icon="tool.icon" width="16" />
+                <span class="float-tip">{{ tool.name }}</span>
+              </span>
+              <span :style="{ width: '100px' }" v-if="availableDeliveryTools.length === 0"
+                class="text-gray500">[无配送工具]</span>
+            </div>
+            </span> -->
           </div>
         </div>
         <div v-else class="empty-tip">
@@ -286,7 +285,7 @@
             <IconifyIcon icon="hugeicons:land-plot" width="14" />
           </span>
           <span>等级：Lv{{ upgrade.required_level }}</span>
-          <span class="upgrade-cost">灵石：{{ upgrade.price }}</span>
+          <span class="upgrade-cost">金币：{{ upgrade.price }}</span>
           <span class="upgrade-btn" @click="upgradeLand(upgrade)">{{ upgrade.bottom }}</span>
         </div>
         <div class="empty-tip">
@@ -310,11 +309,11 @@
           <div class="building-stats">
             <div class="stat-row">
               <span class="text-gray500">获得祝福奖励：</span>
-              <span>经验+{{ worldTree.exp }} &nbsp; 灵石+{{ worldTree.gold }}</span>
+              <span>经验+{{ worldTree.exp }} &nbsp; 金币+{{ worldTree.gold }}</span>
             </div>
             <div class="stat-row">
               <span class="text-gray500">累计祝福奖励：</span>
-              <span>经验+{{ worldTree.total_exp }} &nbsp; 灵石+{{ worldTree.total_gold }}</span>
+              <span>经验+{{ worldTree.total_exp }} &nbsp; 金币+{{ worldTree.total_gold }}</span>
             </div>
             <div class="stat-row">
               <span class="text-gray500">祝福次数：</span>
@@ -400,7 +399,7 @@ const farmStore = useFarmStore()
 const userStore = useUserStore()
 
 // 通知栏
-const notice = ref('【公告】欢迎来到纯文字农场，每日签到世界树可获得经验和灵石，集市任务奖励丰厚哦')
+const notice = ref('【公告】欢迎来到纯文字农场，每日签到世界树可获得经验和金币，集市任务奖励丰厚哦')
 const showNotice = ref(false)
 
 const NOTICE_STORAGE_KEY = 'farm_notice_date'
@@ -465,47 +464,47 @@ const increaseBuyQty = () => {
 }
 
 // 送货模式状态
-const showDeliveryPopup = ref(false)
-const selectedFruit = ref(null)
+// const showDeliveryPopup = ref(false)
+// const selectedFruit = ref(null)
 
 // 点击送货按钮
-const clickDelivery = (fruit) => {
-  if (showDeliveryPopup.value && selectedFruit.value?.handbook_id === fruit.handbook_id) {
-    showDeliveryPopup.value = false
-    selectedFruit.value = null
-  } else {
-    selectedFruit.value = fruit
-    showDeliveryPopup.value = true
-  }
-}
+// const clickDelivery = (fruit) => {
+//   if (showDeliveryPopup.value && selectedFruit.value?.handbook_id === fruit.handbook_id) {
+//     showDeliveryPopup.value = false
+//     selectedFruit.value = null
+//   } else {
+//     selectedFruit.value = fruit
+//     showDeliveryPopup.value = true
+//   }
+// }
 
 // 获取可用的配送工具
-const availableDeliveryTools = computed(() => {
-  return deliveryTools.value.filter(tool => tool.is_have === 1 && tool.is_delivery !== 1)
-})
+// const availableDeliveryTools = computed(() => {
+//   return deliveryTools.value.filter(tool => tool.is_have === 1 && tool.is_delivery !== 1)
+// })
 
 // 选择配送工具
-const selectDeliveryTool = async (tool) => {
-  if (!selectedFruit.value) return
+// const selectDeliveryTool = async (tool) => {
+//   if (!selectedFruit.value) return
 
-  // 检查果实数量是否满足配送工具容量
-  // if (selectedFruit.value.num < tool.capacity) {
-  //   showToast({ message: `数量不足，至少需要${tool.capacity}个`, type: 'error' })
-  //   return
-  // }
+//   // 检查果实数量是否满足配送工具容量
+//   // if (selectedFruit.value.num < tool.capacity) {
+//   //   showToast({ message: `数量不足，至少需要${tool.capacity}个`, type: 'error' })
+//   //   return
+//   // }
 
-  try {
-    await farmStore.useDeliveryTool(tool.id, selectedFruit.value.handbook_id)
-    showToast({ message: `开始配送${selectedFruit.value.handbook.name}！`, type: 'success' })
-    showDeliveryPopup.value = false
-    selectedFruit.value = null
-    // 刷新配送工具列表和我的仓库
-    await farmStore.getDeliveryToolList()
-    await farmStore.fetchWarehouseList('fruit')
-  } catch (error) {
-    showToast({ message: error || '配送失败', type: 'error' })
-  }
-}
+//   try {
+//     await farmStore.useDeliveryTool(tool.id, selectedFruit.value.handbook_id)
+//     showToast({ message: `开始配送${selectedFruit.value.handbook.name}！`, type: 'success' })
+//     showDeliveryPopup.value = false
+//     selectedFruit.value = null
+//     // 刷新配送工具列表和我的仓库
+//     await farmStore.getDeliveryToolList()
+//     await farmStore.fetchWarehouseList('fruit')
+//   } catch (error) {
+//     showToast({ message: error || '配送失败', type: 'error' })
+//   }
+// }
 const selectedLandId = ref(null)
 const isChoiceMode = ref(false)
 const selectedHandbookId = ref(null)
@@ -519,12 +518,12 @@ const getTime = (time) => {
 }
 
 // 配送时间计算（返回非负数）
-const getDeliveryTime = (time) => {
-  const now = new Date()
-  const targetTime = new Date(time)
-  const diff = Math.floor(targetTime.getTime() - now.getTime())
-  return diff > 0 ? diff : 0
-}
+// const getDeliveryTime = (time) => {
+//   const now = new Date()
+//   const targetTime = new Date(time)
+//   const diff = Math.floor(targetTime.getTime() - now.getTime())
+//   return diff > 0 ? diff : 0
+// }
 
 // 配送完成标记（防止重复触发）
 const completedDeliveries = new Set()
@@ -546,9 +545,9 @@ const settleDelivery = async (tool) => {
 }
 
 // 配送完成刷新
-const onDeliveryFinish = async (tool) => {
-  await settleDelivery(tool)
-}
+// const onDeliveryFinish = async (tool) => {
+//   await settleDelivery(tool)
+// }
 
 // 配送状态检查定时器
 let deliveryCheckTimer = null
@@ -665,7 +664,6 @@ const expProgress = computed(() => (exp.value / nextLevelExp.value * 100) || 0)
 const userInfo = computed(() => farmStore.info || {})
 const userName = computed(() => userInfo.value.user_name || '')
 const levelId = computed(() => userInfo.value.level_id || 1)
-const levelTitle = computed(() => userInfo.value.level_title || '')
 const exp = computed(() => userInfo.value.exp || 0)
 const handbooks = computed(() => userInfo.value.handbooks || [])
 const nextLevelExp = computed(() => userInfo.value.next_level_exp || 100)
@@ -678,15 +676,24 @@ const lands = computed(() => farmStore.lands || [])
 const shops = computed(() => farmStore.shops || [])
 const seedList = computed(() => farmStore.seedList || [])
 const fruitList = computed(() => farmStore.fruitList || [])
-const marketList = computed(() => farmStore.marketList || [])
+const marketList = computed(() => {
+  const list = farmStore.marketList || []
+  return [...list].sort((a, b) => {
+    const aReady = checkTaskRequirements(a)
+    const bReady = checkTaskRequirements(b)
+    if (aReady && !bReady) return -1
+    if (!aReady && bReady) return 1
+    return 0
+  })
+})
 const landUpgradeInfo = computed(() => farmStore.landUpgradeInfo || [])
 const specialInfo = computed(() => farmStore.specialInfo || {})
 const worldTree = computed(() => specialInfo.value.world_tree || {})
 const deliveryTools = computed(() => farmStore.deliveryToolList || [])
-const isHaveDeliveryTool = computed(() => farmStore.isHaveDeliveryTool || false)
-const hasDeliveryingTools = computed(() => {
-  return deliveryTools.value.filter(tool => tool.is_delivery === 1 && tool.delivery_record)
-})
+// const isHaveDeliveryTool = computed(() => farmStore.isHaveDeliveryTool || false)
+// const hasDeliveryingTools = computed(() => {
+//   return deliveryTools.value.filter(tool => tool.is_delivery === 1 && tool.delivery_record)
+// })
 
 const hasClearableLands = computed(() => {
   return lands.value.some(l => l.status === 3)
@@ -830,7 +837,7 @@ const landStatus = (status) => {
     case 3:
       return '枯萎的作物'
     case 9:
-      return '待开垦'
+      return '--------待开垦--------'
     default:
       return '未知状态'
   }
@@ -1038,6 +1045,11 @@ const harvestAll = async () => {
 // 点击购买
 const buy = async (item) => {
 
+  if (levelId.value < item.handbook.level_id) {
+    showToast({ message: `需要达到 Lv.${item.handbook.level_id} 才能购买`, type: 'error' })
+    return
+  }
+
   const num = globalBuyQuantity.value
   const spent = num * item.handbook.price
   try {
@@ -1149,7 +1161,7 @@ const init = async () => {
   await farmStore.fetchMarketList() // 初始化集市列表信息
   await farmStore.getLandUpgradeInfo() // 初始化土地升级/开垦信息
   await farmStore.getSpecialInfo() // 初始化特殊建筑信息
-  await farmStore.getDeliveryToolList() // 初始化配送工具列表
+  // await farmStore.getDeliveryToolList() // 初始化配送工具列表
   startDeliveryCheck() // 启动配送状态检查定时器
 }
 

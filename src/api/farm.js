@@ -187,38 +187,38 @@ export const farmApi = {
     })
   },
   // 配送工具列表
-  getDeliveryToolList() {
-    return request({
-      url: '/api/farmUser/getDeliveryToolInfo', // 配送工具列表
-      method: 'post',
-      silent: true,
-    })
-  },
-  // 购买配送工具
-  buyDeliveryTool(data) {
-    return request({
-      url: '/api/farmUser/buyDeliveryTool', // 购买配送工具
-      method: 'post',
-      data,
-      silent: true,
-    })
-  },
-  // 使用配送工具
-  useDeliveryTool(data) {
-    return request({
-      url: '/api/farmUser/useDeliveryTool', // 使用配送工具
-      method: 'post',
-      data,
-      silent: true,
-    })
-  },
-  // 配送结束后更新用户资产和配送记录
-  updateDeliveryRecord(data) {
-    return request({
-      url: '/api/farmUser/updateDeliveryRecord', // 配送结束后更新用户资产和配送记录
-      method: 'post',
-      data,
-      silent: true,
-    })
-  },
+  // getDeliveryToolList() {
+  //   return request({
+  //     url: '/api/farmUser/getDeliveryToolInfo', // 配送工具列表
+  //     method: 'post',
+  //     silent: true,
+  //   })
+  // },
+  // // 购买配送工具
+  // buyDeliveryTool(data) {
+  //   return request({
+  //     url: '/api/farmUser/buyDeliveryTool', // 购买配送工具
+  //     method: 'post',
+  //     data,
+  //     silent: true,
+  //   })
+  // },
+  // // 使用配送工具
+  // useDeliveryTool(data) {
+  //   return request({
+  //     url: '/api/farmUser/useDeliveryTool', // 使用配送工具
+  //     method: 'post',
+  //     data,
+  //     silent: true,
+  //   })
+  // },
+  // // 配送结束后更新用户资产和配送记录
+  // updateDeliveryRecord(data) {
+  //   return request({
+  //     url: '/api/farmUser/updateDeliveryRecord', // 配送结束后更新用户资产和配送记录
+  //     method: 'post',
+  //     data,
+  //     silent: true,
+  //   })
+  // },
 }
