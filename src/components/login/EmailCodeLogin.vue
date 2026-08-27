@@ -7,10 +7,10 @@
     <div class="field-row">
       <span class="field-label">验证码</span>
       <input type="text" v-model="verificationCode" placeholder="6位验证码" class="field-input" />
-      <span class="code-btn" @click="sendCode">[{{ codeButtonText }}]</span>
+      <span class="code-btn" @click="sendCode">{{ codeButtonText }}</span>
     </div>
     <div class="btn-row">
-      <span class="action-btn" @click="handleLogin">{{ isSubmitting ? '[登录中...]' : '[登录]' }}</span>
+      <button class="action-btn" @click="handleLogin">{{ isSubmitting ? '登录中...' : '登录' }}</button>
     </div>
   </div>
 </template>
@@ -116,77 +116,69 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .form-box {
-  border: 1px solid var(--gray500);
-  padding: 8px;
-  margin-bottom: 8px;
+  padding: 2px 0;
 }
 
 .field-row {
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
-  gap: 6px;
-}
-
-.field-row:last-child {
-  margin-bottom: 0;
+  margin-bottom: 12px;
+  gap: 8px;
 }
 
 .field-label {
-
-  font-size: 12px;
-  width: 45px;
+  font-size: 13px;
+  width: 48px;
   flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .field-input {
   flex: 1;
-  background: var(--black100);
-  border: none;
-  border-bottom: 1px dashed var(--gray500);
-  color: var(--white);
-  font-size: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 13px;
   outline: none;
-  padding: 3px 0;
+  padding: 10px 12px;
   min-width: 0;
+}
+
+.field-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
 }
 
 .field-input:-webkit-autofill,
 .field-input:-webkit-autofill:hover,
 .field-input:-webkit-autofill:focus,
 .field-input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 100px var(--black100) inset;
-  -webkit-text-fill-color: var(--white);
+  -webkit-box-shadow: 0 0 0 100px #1f2a44 inset;
+  -webkit-text-fill-color: #fff;
   transition: background-color 5000s ease-in-out 0s;
 }
 
-.field-input::placeholder {}
-
 .code-btn {
-  color: var(--primary100);
+  color: #00d4ff;
   cursor: pointer;
   font-size: 12px;
   flex-shrink: 0;
-}
-
-.code-btn:hover {
-  text-decoration: underline;
+  white-space: nowrap;
 }
 
 .btn-row {
-  text-align: center;
-  margin-top: 10px;
-  padding-top: 8px;
-  border-top: 1px dashed var(--gray500);
+  margin-top: 4px;
 }
 
 .action-btn {
-  color: var(--primary100);
+  width: 100%;
+  padding: 11px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 12px;
-}
-
-.action-btn:hover {
-  text-decoration: underline;
 }
 </style>

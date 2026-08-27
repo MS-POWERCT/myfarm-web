@@ -7,19 +7,22 @@
       <span class="address-text">{{ walletAddress || '点击下方按钮连接钱包' }}</span>
     </div>
 
-    <div v-if="walletAddress" class="wallet-name-row">[{{ walletName }}]</div>
+    <div v-if="walletAddress" class="wallet-name-row">{{ walletName }}</div>
 
     <div class="btn-row">
-      <span v-if="!walletAddress" class="action-btn" @click="handleConnect">{{ connecting ? '[连接中...]' : '[连接钱包]'
-      }}</span>
-      <span v-else class="action-btn" @click="handleLogin">{{ logging ? '[登录中...]' : '[钱包登录]' }}</span>
+      <button v-if="!walletAddress" class="action-btn" @click="handleConnect">
+        {{ connecting ? '连接中...' : '连接钱包' }}
+      </button>
+      <button v-else class="action-btn" @click="handleLogin">
+        {{ logging ? '登录中...' : '钱包登录' }}
+      </button>
     </div>
 
     <div v-if="walletAddress" class="action-row">
-      <span class="disconnect-btn" @click="handleDisconnect">[断开连接]</span>
+      <span class="disconnect-btn" @click="handleDisconnect">断开连接</span>
     </div>
 
-    <div v-if="error" class="error-row">[{{ error }}]</div>
+    <div v-if="error" class="error-row">{{ error }}</div>
   </div>
 </template>
 
@@ -119,79 +122,75 @@ function handleDisconnect() {
 
 <style scoped>
 .web3-box {
-  border: 1px solid var(--gray500);
-  padding: 8px;
-  margin-bottom: 8px;
+  padding: 2px 0;
 }
 
 .web3-desc {
-
   font-size: 12px;
-  margin-bottom: 10px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 14px;
+  line-height: 1.5;
 }
 
 .address-row {
   display: flex;
   align-items: center;
   margin-bottom: 8px;
+  gap: 8px;
 }
 
 .field-label {
-
-  font-size: 12px;
-  width: 65px;
+  font-size: 13px;
+  width: 64px;
   flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .address-text {
-  color: var(--white);
+  color: #fff;
   font-size: 12px;
   font-family: monospace;
+  word-break: break-all;
 }
 
 .wallet-name-row {
-  color: var(--green);
-  font-size: 11px;
-  margin-bottom: 10px;
+  color: #4ade80;
+  font-size: 12px;
+  margin-bottom: 12px;
+  padding-left: 72px;
 }
 
 .btn-row {
-  text-align: center;
-  padding-top: 8px;
-  border-top: 1px dashed var(--gray500);
+  margin-top: 8px;
 }
 
 .action-row {
   text-align: center;
-  margin-top: 8px;
+  margin-top: 10px;
 }
 
 .action-btn {
-  color: var(--primary100);
+  width: 100%;
+  padding: 11px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 12px;
-}
-
-.action-btn:hover {
-  text-decoration: underline;
 }
 
 .disconnect-btn {
-
   cursor: pointer;
   font-size: 12px;
-}
-
-.disconnect-btn:hover {
-  text-decoration: underline;
+  color: rgba(255, 255, 255, 0.45);
 }
 
 .error-row {
-  color: var(--red);
+  color: #f87171;
   font-size: 12px;
   text-align: center;
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px dashed var(--gray500);
+  margin-top: 10px;
 }
 </style>

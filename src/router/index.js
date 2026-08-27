@@ -17,9 +17,9 @@ const router = createRouter({
       component: () => import('../views/LoginView.vue'),
     },
     {
-      path: '/farm-new',
-      name: 'farm-new',
-      component: () => import('../views/FarmNewView.vue'),
+      path: '/farm-100',
+      name: 'farm-100',
+      component: () => import('../views/FarmView100.vue'),
       meta: { requiresAuth: true },
     },
     ...UserSettingsRoutes,

@@ -1,9 +1,11 @@
 <template>
   <div class="settings-view">
     <div class="top-nav">
-      <span class="nav-left" @click="$router.go(-1)">← 返回</span>
+      <div class="nav-back" @click="$router.go(-1)">
+        <IconifyIcon icon="mdi:chevron-left" width="22" />
+      </div>
       <span class="nav-center">设置</span>
-      <span class="nav-right"></span>
+      <span class="nav-placeholder"></span>
     </div>
 
     <div class="settings-content">
@@ -11,27 +13,53 @@
         <div class="section-title">账户安全</div>
         <div class="section-body">
           <div class="setting-item" @click="showEmailPopup = true">
-            <span class="item-label">邮箱</span>
-            <span class="item-info">{{ user?.email ? '已绑定邮箱' : '绑定邮箱以提升账户安全性' }}</span>
+            <div class="item-icon email">
+              <IconifyIcon icon="mdi:email-outline" width="20" />
+            </div>
+            <div class="item-text">
+              <span class="item-label">邮箱</span>
+              <span class="item-info">{{ user?.email ? '已绑定邮箱' : '绑定邮箱以提升账户安全性' }}</span>
+            </div>
             <span v-if="user?.email" class="item-value">{{ user?.email }}</span>
-            <span v-else class="item-action">[绑定]</span>
+            <span v-else class="item-action">绑定</span>
+            <IconifyIcon icon="mdi:chevron-right" width="16" class="item-arrow" />
           </div>
 
           <div class="setting-item" :class="{ 'is-disabled': !user?.email }" @click="handlePasswordClick">
-            <span class="item-label">密码</span>
-            <span class="item-info">{{ user?.has_password ? '密码强度：强' : '设置密码保护账户' }}</span>
+            <div class="item-icon password">
+              <IconifyIcon icon="mdi:lock-outline" width="20" />
+            </div>
+            <div class="item-text">
+              <span class="item-label">密码</span>
+              <span class="item-info">{{ user?.has_password ? '密码强度：强' : '设置密码保护账户' }}</span>
+            </div>
             <span v-if="user?.has_password" class="item-value">已设置</span>
-            <span v-else-if="user?.email" class="item-action">[设置]</span>
+            <span v-else-if="user?.email" class="item-action">设置</span>
             <span v-else class="item-disabled">请先绑定邮箱</span>
+            <IconifyIcon icon="mdi:chevron-right" width="16" class="item-arrow" />
           </div>
 
           <div class="setting-item" @click="showWeb3Popup = true">
-            <span class="item-label">Web3钱包</span>
-            <span class="item-info">{{ user?.address ? '已绑定钱包地址' : '绑定钱包享受Web3服务' }}</span>
+            <div class="item-icon wallet">
+              <IconifyIcon icon="mdi:wallet-outline" width="20" />
+            </div>
+            <div class="item-text">
+              <span class="item-label">Web3钱包</span>
+              <span class="item-info">{{ user?.address ? '已绑定钱包地址' : '绑定钱包享受Web3服务' }}</span>
+            </div>
             <span v-if="user?.address" class="item-value">{{ formatAddress(user?.address) }}</span>
-            <span v-else class="item-action">[绑定]</span>
+            <span v-else class="item-action">绑定</span>
+            <IconifyIcon icon="mdi:chevron-right" width="16" class="item-arrow" />
           </div>
         </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">其他</div>
+        <button class="logout-btn" @click="handleLogout">
+          <IconifyIcon icon="basil:logout-solid" width="18" />
+          退出登录
+        </button>
       </div>
 
       <div class="version-line">版本 {{ globalStore.APP_VERSION }}</div>
@@ -41,7 +69,9 @@
       <div class="popup-box">
         <div class="popup-header">
           <span class="popup-title">绑定邮箱</span>
-          <span class="popup-close" @click="showEmailPopup = false">×</span>
+          <span class="popup-close" @click="showEmailPopup = false">
+            <IconifyIcon icon="mdi:close" width="18" />
+          </span>
         </div>
         <div class="popup-body">
           <div class="popup-desc">绑定邮箱后可用于找回密码、接收重要通知</div>
@@ -54,12 +84,12 @@
             <input type="text" v-model="emailForm.code" placeholder="请输入验证码" class="field-input" />
             <span :class="{ 'is-disabled': emailCountdown > 0 || !emailForm.email }" @click="sendEmailCode"
               class="code-btn">
-              {{ emailCountdown > 0 ? `${emailCountdown}s` : '[发送]' }}
+              {{ emailCountdown > 0 ? `${emailCountdown}s` : '发送' }}
             </span>
           </div>
         </div>
         <div class="popup-footer">
-          <span class="submit-btn" @click="handleBindEmail">{{ emailLoading ? '[绑定中...]' : '[确认绑定]' }}</span>
+          <button class="submit-btn" @click="handleBindEmail">{{ emailLoading ? '绑定中...' : '确认绑定' }}</button>
         </div>
       </div>
     </div>
@@ -68,7 +98,9 @@
       <div class="popup-box">
         <div class="popup-header">
           <span class="popup-title">设置密码</span>
-          <span class="popup-close" @click="showPasswordPopup = false">×</span>
+          <span class="popup-close" @click="showPasswordPopup = false">
+            <IconifyIcon icon="mdi:close" width="18" />
+          </span>
         </div>
         <div class="popup-body">
           <div class="popup-desc">{{ user?.email }} 将收到验证码</div>
@@ -76,7 +108,7 @@
             <span class="field-label">验证码</span>
             <input type="text" v-model="passwordForm.code" placeholder="请输入验证码" class="field-input" />
             <span :class="{ 'is-disabled': passwordCountdown > 0 }" @click="sendPasswordCode" class="code-btn">
-              {{ passwordCountdown > 0 ? `${passwordCountdown}s` : '[发送]' }}
+              {{ passwordCountdown > 0 ? `${passwordCountdown}s` : '发送' }}
             </span>
           </div>
           <div class="field-row">
@@ -90,7 +122,7 @@
           </div>
         </div>
         <div class="popup-footer">
-          <span class="submit-btn" @click="handleSetPassword">{{ passwordLoading ? '[设置中...]' : '[确认设置]' }}</span>
+          <button class="submit-btn" @click="handleSetPassword">{{ passwordLoading ? '设置中...' : '确认设置' }}</button>
         </div>
       </div>
     </div>
@@ -99,19 +131,21 @@
       <div class="popup-box">
         <div class="popup-header">
           <span class="popup-title">绑定Web3钱包</span>
-          <span class="popup-close" @click="showWeb3Popup = false">×</span>
+          <span class="popup-close" @click="showWeb3Popup = false">
+            <IconifyIcon icon="mdi:close" width="18" />
+          </span>
         </div>
         <div class="popup-body">
           <div v-if="!web3Address" class="web3-connect">
             <div class="web3-desc">使用 Web3 钱包进行身份验证</div>
             <div class="web3-hint">连接您的钱包即可完成绑定</div>
-            <span class="submit-btn" @click="handleConnectWallet">{{ web3Connecting ? '[连接中...]' : '[连接钱包]' }}</span>
+            <button class="submit-btn" @click="handleConnectWallet">{{ web3Connecting ? '连接中...' : '连接钱包' }}</button>
           </div>
           <div v-else class="web3-connected">
-            <div class="wallet-info">[{{ web3WalletName }}]</div>
+            <div class="wallet-name">{{ web3WalletName }}</div>
             <div class="wallet-address">{{ web3Address }}</div>
-            <span class="submit-btn" @click="handleBindWeb3">{{ web3Binding ? '[绑定中...]' : '[确认绑定]' }}</span>
-            <span class="change-btn" @click="handleDisconnectWallet">[更换钱包]</span>
+            <button class="submit-btn" @click="handleBindWeb3">{{ web3Binding ? '绑定中...' : '确认绑定' }}</button>
+            <span class="change-btn" @click="handleDisconnectWallet">更换钱包</span>
           </div>
         </div>
         <div v-if="web3Error" class="popup-error">{{ web3Error }}</div>
@@ -122,6 +156,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { showToast, showFailToast } from 'vant'
 import { useUserStore } from '@/stores/user'
 import { useGlobalStore } from '@/stores/global'
@@ -131,6 +166,7 @@ import { connectWallet, getCurrentAccount, signMessage, formatAddress } from '@/
 
 const userStore = useUserStore()
 const globalStore = useGlobalStore()
+const router = useRouter()
 const user = computed(() => userStore.user)
 
 const showEmailPopup = ref(false)
@@ -279,6 +315,11 @@ function handleDisconnectWallet() {
   web3Error.value = ''
 }
 
+const handleLogout = async () => {
+  await userStore.logout()
+  router.push('/login')
+}
+
 onMounted(() => {
   userStore.getUserInfo()
 })
@@ -287,67 +328,68 @@ onMounted(() => {
 <style scoped>
 .settings-view {
   min-height: 100vh;
-  background-color: var(--black100);
-  color: var(--white);
-  padding: 12px;
-  font-family: 'Microsoft YaHei', sans-serif;
-  font-size: 12px;
+  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  color: #fff;
+  font-size: 13px;
 }
 
 .top-nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 0;
-  margin-bottom: 12px;
-  border-bottom: 1px dashed var(--gray500);
+  padding: 12px 16px;
+  padding-top: calc(12px + env(safe-area-inset-top));
 }
 
-.nav-left {
+.nav-back,
+.nav-placeholder {
+  width: 36px;
+  height: 36px;
+}
+
+.nav-back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
   cursor: pointer;
-  font-size: 12px;
-}
-
-.nav-left:hover {
-  text-decoration: underline;
 }
 
 .nav-center {
-  color: var(--white);
-  font-weight: bold;
-  font-size: 14px;
-}
-
-.nav-right {
-  width: 50px;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .settings-content {
-  padding: 4px 0;
+  padding: 4px 16px 24px;
 }
 
 .section {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .section-title {
-  font-size: 12px;
-  margin-bottom: 8px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 10px;
   padding-left: 2px;
 }
 
 .section-body {
-  border: 1px solid var(--gray500);
-  padding: 4px 0;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  overflow: hidden;
 }
 
 .setting-item {
   display: flex;
   align-items: center;
-  padding: 10px 8px;
-  border-bottom: 1px dashed var(--gray500);
-  cursor: pointer;
+  padding: 14px 12px;
   gap: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .setting-item:last-child {
@@ -355,98 +397,148 @@ onMounted(() => {
 }
 
 .setting-item:hover {
-  background: var(--black300);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .setting-item.is-disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
-.item-label {
-  color: var(--white);
-  font-size: 12px;
-  width: 75px;
+.item-icon {
+  width: 36px;
+  height: 36px;
   flex-shrink: 0;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.item-icon.email {
+  background: rgba(96, 165, 250, 0.18);
+  color: #60a5fa;
+}
+
+.item-icon.password {
+  background: rgba(167, 139, 250, 0.18);
+  color: #a78bfa;
+}
+
+.item-icon.wallet {
+  background: rgba(74, 222, 128, 0.18);
+  color: #4ade80;
+}
+
+.item-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.item-label {
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .item-info {
-
-  font-size: 12px;
-  flex: 1;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
 }
 
 .item-value {
-
-  font-size: 12px;
-  margin-right: 8px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 42%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .item-action {
-  color: var(--primary100);
   font-size: 12px;
-}
-
-.item-action:hover {
-  text-decoration: underline;
+  color: #00d4ff;
+  flex-shrink: 0;
 }
 
 .item-disabled {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  flex-shrink: 0;
+}
 
-  font-size: 12px;
+.item-arrow {
+  color: rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+}
+
+.logout-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  border-radius: 14px;
+  background: rgba(248, 113, 113, 0.12);
+  color: #f87171;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .version-line {
   text-align: center;
-
   font-size: 12px;
-  padding: 20px 0;
+  color: rgba(255, 255, 255, 0.35);
+  padding: 8px 0 16px;
 }
 
 .popup-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.85);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  padding: 24px;
 }
 
 .popup-box {
-  width: 90%;
-  max-width: 320px;
-  background: var(--black100);
-  border: 1px solid var(--gray500);
-  padding: 10px;
+  width: 100%;
+  max-width: 340px;
+  background: linear-gradient(180deg, #1f2a44 0%, #16213e 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 16px 18px;
 }
 
 .popup-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 0;
-  margin-bottom: 10px;
-  border-bottom: 1px dashed var(--gray500);
+  margin-bottom: 12px;
 }
 
 .popup-title {
-  color: var(--white);
-  font-weight: bold;
-  font-size: 14px;
-}
-
-.popup-close {
-
-  cursor: pointer;
+  font-weight: 600;
   font-size: 16px;
 }
 
-.popup-close:hover {
-  color: var(--white);
+.popup-close {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .popup-body {
@@ -454,127 +546,126 @@ onMounted(() => {
 }
 
 .popup-desc {
-
   font-size: 12px;
-  margin-bottom: 10px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 14px;
+  line-height: 1.5;
 }
 
 .field-row {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
-  gap: 6px;
+  margin-bottom: 12px;
+  gap: 8px;
 }
 
 .field-label {
-
   font-size: 12px;
-  width: 65px;
+  color: rgba(255, 255, 255, 0.55);
+  width: 64px;
   flex-shrink: 0;
 }
 
 .field-input {
   flex: 1;
-  background: var(--black100);
-  border: none;
-  border-bottom: 1px dashed var(--gray500);
-  color: var(--white);
-  font-size: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 13px;
   outline: none;
-  padding: 3px 0;
+  padding: 8px 10px;
   min-width: 0;
+}
+
+.field-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
 }
 
 .field-input:-webkit-autofill,
 .field-input:-webkit-autofill:hover,
 .field-input:-webkit-autofill:focus,
 .field-input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 100px var(--black100) inset;
-  -webkit-text-fill-color: var(--white);
+  -webkit-box-shadow: 0 0 0 100px #1f2a44 inset;
+  -webkit-text-fill-color: #fff;
   transition: background-color 5000s ease-in-out 0s;
 }
 
 .code-btn {
-  color: var(--primary100);
+  color: #00d4ff;
   cursor: pointer;
   font-size: 12px;
   flex-shrink: 0;
-}
-
-.code-btn:hover {
-  text-decoration: underline;
+  padding: 6px 0;
 }
 
 .code-btn.is-disabled {
+  color: rgba(255, 255, 255, 0.3);
   cursor: not-allowed;
 }
 
 .popup-footer {
-  text-align: center;
-  padding: 10px 0;
-  margin-top: 4px;
-  border-top: 1px dashed var(--gray500);
+  margin-top: 8px;
 }
 
 .submit-btn {
-  color: var(--primary100);
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 12px;
-}
-
-.submit-btn:hover {
-  text-decoration: underline;
 }
 
 .change-btn {
   display: block;
-
   cursor: pointer;
   font-size: 12px;
   text-align: center;
-  margin-top: 10px;
-}
-
-.change-btn:hover {
-  text-decoration: underline;
+  margin-top: 12px;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .web3-connect,
 .web3-connected {
   text-align: center;
-  padding: 6px 0;
+  padding: 8px 0;
 }
 
 .web3-desc {
-  color: var(--white);
-  font-size: 12px;
+  font-size: 13px;
   margin-bottom: 6px;
 }
 
 .web3-hint {
-
   font-size: 12px;
-  margin-bottom: 12px;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 16px;
 }
 
-.wallet-info {
-  color: var(--green);
-  font-size: 12px;
+.wallet-name {
+  color: #4ade80;
+  font-size: 13px;
   margin-bottom: 6px;
 }
 
 .wallet-address {
-
   font-family: monospace;
   font-size: 12px;
-  margin-bottom: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 16px;
+  word-break: break-all;
 }
 
 .popup-error {
-  color: var(--red);
+  color: #f87171;
   font-size: 12px;
   text-align: center;
-  padding: 10px 0;
-  border-top: 1px dashed var(--gray500);
+  padding-top: 10px;
+  margin-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 </style>
