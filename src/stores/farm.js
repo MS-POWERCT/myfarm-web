@@ -7,8 +7,9 @@
       loading: false,
       lands: [], // 土地列表
       shops: [], // 商店列表
-      seedList: [], // 仓库列表（种子）
-      fruitList: [], // 仓库列表（水果）
+      warehouseList: [], // 全部仓库
+      seedList: [], // 背包（种子）
+      fruitList: [], // 仓库（水果 + 产物）
       toolList: [], // 仓库列表（工具）
       marketList: [], // 仓库列表（集市）
       landUpgradeInfo: [], // 土地升级/开垦信息（土地）
@@ -172,7 +173,7 @@
           this.loading = false
         }
       },
-      // 获取仓库列表
+      // 获取仓库列表（按 type：seed 背包 / fruit 仓库）
       async fetchWarehouseList(type) {
         try {
           this.loading = true

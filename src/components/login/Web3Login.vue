@@ -127,7 +127,7 @@ function handleDisconnect() {
 
 .web3-desc {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--ui-label, rgba(255, 255, 255, 0.5));
   margin-bottom: 14px;
   line-height: 1.5;
 }
@@ -143,18 +143,18 @@ function handleDisconnect() {
   font-size: 13px;
   width: 64px;
   flex-shrink: 0;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--ui-label, rgba(255, 255, 255, 0.6));
 }
 
 .address-text {
-  color: #fff;
+  color: var(--ui-text, #fff);
   font-size: 12px;
   font-family: monospace;
   word-break: break-all;
 }
 
 .wallet-name-row {
-  color: #4ade80;
+  color: var(--ui-accent, #4ade80);
   font-size: 12px;
   margin-bottom: 12px;
   padding-left: 72px;
@@ -174,8 +174,8 @@ function handleDisconnect() {
   padding: 11px;
   border: none;
   border-radius: 12px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #fff;
+  background: var(--ui-btn-bg, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+  color: var(--ui-btn-text, #fff);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -184,7 +184,7 @@ function handleDisconnect() {
 .disconnect-btn {
   cursor: pointer;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--ui-label, rgba(255, 255, 255, 0.45));
 }
 
 .error-row {

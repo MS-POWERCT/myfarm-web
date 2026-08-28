@@ -12,6 +12,12 @@ export const useGlobalStore = defineStore('global', {
     APP_VERSION: '1.0.0',
     FARM_NAME: import.meta.env.VITE_APP_NAME
   }),
+  getters: {
+    goldIcon: (state) =>
+      state.initData?.gold_icon || '',
+    expIcon: (state) =>
+      state.initData?.exp_icon || '',
+  },
   actions: {
     async fetchInitData() {
       this.isLoading = true

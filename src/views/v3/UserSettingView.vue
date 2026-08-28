@@ -56,6 +56,7 @@
 
       <div class="section">
         <div class="section-title">其他</div>
+        <UiVersionSwitch />
         <button class="logout-btn" @click="handleLogout">
           <IconifyIcon icon="basil:logout-solid" width="18" />
           退出登录
@@ -163,6 +164,7 @@ import { useGlobalStore } from '@/stores/global'
 import { userApi } from '@/api/user'
 import { globalApi } from '@/api/global'
 import { connectWallet, getCurrentAccount, signMessage, formatAddress } from '@/utils/web3'
+import UiVersionSwitch from '@/components/UiVersionSwitch.vue'
 
 const userStore = useUserStore()
 const globalStore = useGlobalStore()
@@ -328,9 +330,11 @@ onMounted(() => {
 <style scoped>
 .settings-view {
   min-height: 100vh;
-  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-  color: #fff;
+  color: #f3ead8;
   font-size: 13px;
+  background:
+    radial-gradient(1200px 500px at 20% -10%, rgba(124, 179, 66, 0.18), transparent 55%),
+    linear-gradient(180deg, #1b2616 0%, #2a2216 48%, #1a140e 100%);
 }
 
 .top-nav {
@@ -351,7 +355,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.28);
   border-radius: 10px;
   cursor: pointer;
 }
@@ -371,14 +375,15 @@ onMounted(() => {
 
 .section-title {
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.55);
+  color: #c5de9d;
   margin-bottom: 10px;
   padding-left: 2px;
+  letter-spacing: 0.06em;
 }
 
 .section-body {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(20, 28, 16, 0.62);
+  border: 1px solid rgba(232, 197, 71, 0.16);
   border-radius: 16px;
   overflow: hidden;
 }
@@ -389,7 +394,7 @@ onMounted(() => {
   padding: 14px 12px;
   gap: 10px;
   cursor: pointer;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(243, 234, 216, 0.08);
 }
 
 .setting-item:last-child {
@@ -397,7 +402,7 @@ onMounted(() => {
 }
 
 .setting-item:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(124, 179, 66, 0.08);
 }
 
 .setting-item.is-disabled {
@@ -416,18 +421,18 @@ onMounted(() => {
 }
 
 .item-icon.email {
-  background: rgba(96, 165, 250, 0.18);
-  color: #60a5fa;
+  background: rgba(124, 179, 66, 0.22);
+  color: #b6e388;
 }
 
 .item-icon.password {
-  background: rgba(167, 139, 250, 0.18);
-  color: #a78bfa;
+  background: rgba(232, 197, 71, 0.18);
+  color: #e8c547;
 }
 
 .item-icon.wallet {
-  background: rgba(74, 222, 128, 0.18);
-  color: #4ade80;
+  background: rgba(122, 215, 255, 0.16);
+  color: #7ad7ff;
 }
 
 .item-text {
@@ -445,12 +450,12 @@ onMounted(() => {
 
 .item-info {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(243, 234, 216, 0.45);
 }
 
 .item-value {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(243, 234, 216, 0.72);
   max-width: 42%;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -459,18 +464,18 @@ onMounted(() => {
 
 .item-action {
   font-size: 12px;
-  color: #00d4ff;
+  color: #e8c547;
   flex-shrink: 0;
 }
 
 .item-disabled {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(243, 234, 216, 0.4);
   flex-shrink: 0;
 }
 
 .item-arrow {
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(243, 234, 216, 0.3);
   flex-shrink: 0;
 }
 
@@ -493,7 +498,7 @@ onMounted(() => {
 .version-line {
   text-align: center;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(243, 234, 216, 0.35);
   padding: 8px 0 16px;
 }
 
@@ -511,8 +516,8 @@ onMounted(() => {
 .popup-box {
   width: 100%;
   max-width: 340px;
-  background: linear-gradient(180deg, #1f2a44 0%, #16213e 100%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #24301c;
+  border: 1px solid rgba(232, 197, 71, 0.18);
   border-radius: 16px;
   padding: 16px 18px;
 }
@@ -535,10 +540,10 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.28);
   border-radius: 8px;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(243, 234, 216, 0.7);
 }
 
 .popup-body {
@@ -547,7 +552,7 @@ onMounted(() => {
 
 .popup-desc {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(243, 234, 216, 0.5);
   margin-bottom: 14px;
   line-height: 1.5;
 }
@@ -561,17 +566,17 @@ onMounted(() => {
 
 .field-label {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(243, 234, 216, 0.55);
   width: 64px;
   flex-shrink: 0;
 }
 
 .field-input {
   flex: 1;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(197, 222, 157, 0.18);
   border-radius: 10px;
-  color: #fff;
+  color: #f3ead8;
   font-size: 13px;
   outline: none;
   padding: 8px 10px;
@@ -579,20 +584,20 @@ onMounted(() => {
 }
 
 .field-input::placeholder {
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(243, 234, 216, 0.3);
 }
 
 .field-input:-webkit-autofill,
 .field-input:-webkit-autofill:hover,
 .field-input:-webkit-autofill:focus,
 .field-input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 100px #1f2a44 inset;
-  -webkit-text-fill-color: #fff;
+  -webkit-box-shadow: 0 0 0 100px #24301c inset;
+  -webkit-text-fill-color: #f3ead8;
   transition: background-color 5000s ease-in-out 0s;
 }
 
 .code-btn {
-  color: #00d4ff;
+  color: #e8c547;
   cursor: pointer;
   font-size: 12px;
   flex-shrink: 0;
@@ -600,7 +605,7 @@ onMounted(() => {
 }
 
 .code-btn.is-disabled {
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(243, 234, 216, 0.3);
   cursor: not-allowed;
 }
 
@@ -613,8 +618,8 @@ onMounted(() => {
   padding: 10px;
   border: none;
   border-radius: 10px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #fff;
+  background: linear-gradient(180deg, #6f9b42 0%, #4e742c 100%);
+  color: #f3ead8;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -626,7 +631,7 @@ onMounted(() => {
   font-size: 12px;
   text-align: center;
   margin-top: 12px;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(243, 234, 216, 0.5);
 }
 
 .web3-connect,
@@ -642,12 +647,12 @@ onMounted(() => {
 
 .web3-hint {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(243, 234, 216, 0.45);
   margin-bottom: 16px;
 }
 
 .wallet-name {
-  color: #4ade80;
+  color: #b6e388;
   font-size: 13px;
   margin-bottom: 6px;
 }
@@ -655,7 +660,7 @@ onMounted(() => {
 .wallet-address {
   font-family: monospace;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(243, 234, 216, 0.7);
   margin-bottom: 16px;
   word-break: break-all;
 }

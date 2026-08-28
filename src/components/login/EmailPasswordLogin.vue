@@ -75,15 +75,15 @@ const handleLogin = async () => {
   font-size: 13px;
   width: 48px;
   flex-shrink: 0;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--ui-label, rgba(255, 255, 255, 0.6));
 }
 
 .field-input {
   flex: 1;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--ui-input-bg, rgba(255, 255, 255, 0.08));
+  border: 1px solid var(--ui-input-border, rgba(255, 255, 255, 0.1));
   border-radius: 10px;
-  color: #fff;
+  color: var(--ui-text, #fff);
   font-size: 13px;
   outline: none;
   padding: 10px 12px;
@@ -91,15 +91,15 @@ const handleLogin = async () => {
 }
 
 .field-input::placeholder {
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--ui-placeholder, rgba(255, 255, 255, 0.3));
 }
 
 .field-input:-webkit-autofill,
 .field-input:-webkit-autofill:hover,
 .field-input:-webkit-autofill:focus,
 .field-input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 100px #1f2a44 inset;
-  -webkit-text-fill-color: #fff;
+  -webkit-box-shadow: 0 0 0 100px var(--ui-autofill, #1f2a44) inset;
+  -webkit-text-fill-color: var(--ui-text, #fff);
   transition: background-color 5000s ease-in-out 0s;
 }
 
@@ -112,8 +112,8 @@ const handleLogin = async () => {
   padding: 11px;
   border: none;
   border-radius: 12px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #fff;
+  background: var(--ui-btn-bg, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+  color: var(--ui-btn-text, #fff);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;

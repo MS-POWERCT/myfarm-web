@@ -6,7 +6,7 @@
           <IconifyIcon icon="mdi:sprout" width="28" />
         </div>
         <div class="title-line">{{ globalStore.APP_NAME }}</div>
-        <div class="sub-title">登录账号，继续你的农场</div>
+        <div class="sub-title">播种、收获，继续你的农场</div>
       </div>
 
       <div class="mode-row">
@@ -30,11 +30,11 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import EmailCodeLogin from '../components/login/EmailCodeLogin.vue'
-import EmailPasswordLogin from '../components/login/EmailPasswordLogin.vue'
-import Web3Login from '../components/login/Web3Login.vue'
-import { checkWeb3Support } from '../utils/web3'
-import { useGlobalStore } from '../stores/global'
+import EmailCodeLogin from '@/components/login/EmailCodeLogin.vue'
+import EmailPasswordLogin from '@/components/login/EmailPasswordLogin.vue'
+import Web3Login from '@/components/login/Web3Login.vue'
+import { checkWeb3Support } from '@/utils/web3'
+import { useGlobalStore } from '@/stores/global'
 
 const LOGIN_MODE_STORAGE_KEY = 'self_youth_login_mode_v1'
 const loginMode = ref('email_code')
@@ -79,20 +79,32 @@ onMounted(() => {
 
 <style scoped>
 .login-page {
+  --ui-btn-bg: linear-gradient(180deg, #6f9b42 0%, #4e742c 100%);
+  --ui-btn-text: #f3ead8;
+  --ui-accent: #e8c547;
+  --ui-input-bg: rgba(0, 0, 0, 0.28);
+  --ui-input-border: rgba(197, 222, 157, 0.18);
+  --ui-autofill: #24301c;
+  --ui-label: rgba(243, 234, 216, 0.62);
+  --ui-text: #f3ead8;
+  --ui-placeholder: rgba(243, 234, 216, 0.3);
+
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px 16px;
-  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-  color: #fff;
+  color: #f3ead8;
+  background:
+    radial-gradient(1200px 500px at 20% -10%, rgba(124, 179, 66, 0.18), transparent 55%),
+    linear-gradient(180deg, #1b2616 0%, #2a2216 48%, #1a140e 100%);
 }
 
 .login-shell {
   width: 100%;
   max-width: 360px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(20, 28, 16, 0.62);
+  border: 1px solid rgba(232, 197, 71, 0.16);
   border-radius: 20px;
   padding: 28px 22px 22px;
 }
@@ -110,23 +122,20 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   border-radius: 16px;
-  background: rgba(74, 222, 128, 0.18);
-  color: #4ade80;
+  background: #3d5a2b;
+  color: #b6e388;
 }
 
 .title-line {
   font-size: 22px;
   font-weight: 700;
-  background: linear-gradient(135deg, #00d4ff, #7b2cbf);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #c5de9d;
 }
 
 .sub-title {
   margin-top: 6px;
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(243, 234, 216, 0.55);
 }
 
 .mode-row {
@@ -134,7 +143,7 @@ onMounted(() => {
   gap: 6px;
   margin-bottom: 18px;
   padding: 4px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.28);
   border-radius: 12px;
 }
 
@@ -145,12 +154,12 @@ onMounted(() => {
   border-radius: 9px;
   cursor: pointer;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(243, 234, 216, 0.5);
 }
 
 .mode-item.active {
-  background: rgba(102, 126, 234, 0.35);
-  color: #fff;
+  background: rgba(124, 179, 66, 0.28);
+  color: #e8c547;
   font-weight: 600;
 }
 

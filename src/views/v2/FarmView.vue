@@ -8,16 +8,20 @@
         </div>
         <div class="wallet-info">
           <div v-for="walletAsset in walletAssets" :key="walletAsset.asset_id" class="wallet-item">
-            <IconifyIcon v-if="walletAsset.asset_id === 1" icon="game-icons:gold-coin" width="16" class="coin-icon" />
-            <IconifyIcon v-else icon="ph:gem" width="16" class="gem-icon" />
-            <span>{{ walletAsset.balance }} {{ walletAsset.asset.name }}</span>
+            <IconifyIcon v-if="walletAsset.asset_id !== 1" icon="ph:gem" width="16" class="gem-icon" />
+            <span>{{ walletAsset.balance }}</span>
+            <IconifyIcon v-if="walletAsset.asset_id === 1" :icon="globalStore.goldIcon" width="16" />
+            <span v-else>{{ walletAsset.asset.name }}</span>
           </div>
         </div>
       </div>
       <div class="header-meta">
         <span class="level-num" :class="{ 'is-levelup': isLevelingUp }">Lv.{{ levelId }}</span>
         <span v-if="levelTitle" class="level-title">{{ levelTitle }}</span>
-        <span class="exp-text">{{ exp }}/{{ nextLevelExp }}</span>
+        <span class="exp-text">
+          {{ exp }}/{{ nextLevelExp }}
+          <IconifyIcon :icon="globalStore.expIcon" width="14" />
+        </span>
       </div>
       <div class="exp-bar-bg" :class="{ 'is-levelup': isLevelingUp }">
         <div class="exp-bar-fill" :style="{ width: (isLevelingUp ? 100 : expProgress) + '%' }"></div>
@@ -42,12 +46,12 @@
             </div>
             <div class="market-rewards">
               <span class="reward-pill exp">
-                <IconifyIcon icon="mdi:star-four-points" width="11" />
                 +{{ item.farm_task.reward_exp }}
+                <IconifyIcon :icon="globalStore.expIcon" width="12" />
               </span>
               <span class="reward-pill gold">
-                <IconifyIcon icon="game-icons:gold-coin" width="11" />
                 +{{ item.farm_task.reward_gold }}
+                <IconifyIcon :icon="globalStore.goldIcon" width="12" />
               </span>
             </div>
           </div>
@@ -78,7 +82,7 @@
           <div class="delivery-mid">
             <span class="delivery-item">{{ tool.delivery_record.handbook?.name }}</span>
             <span class="delivery-reward">+{{ tool.delivery_record.amount }}{{
-              tool.delivery_record.handbook?.selling_asset_name || '灵石' }}</span>
+              tool.delivery_record.handbook?.selling_asset_name }}</span>
           </div>
           <div class="delivery-bottom">
             <van-count-down v-if="tool.delivery_record.status === 0"
@@ -222,7 +226,7 @@
           <div class="panel-header">
             <span class="panel-tip">仓库 {{ warehouseUse }} / {{ warehouseSize }}</span>
             <span v-if="nextExtendPrice > 0" class="extend-btn" @click="extendWarehouse">
-              扩充 +{{ nextExtendSize }} ({{ nextExtendPrice }}灵石)
+              扩充 +{{ nextExtendSize }} ({{ nextExtendPrice }})
             </span>
             <span v-else class="text-gray">仓库已满</span>
           </div>
@@ -469,14 +473,14 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
-import { useGlobalStore } from '../stores/global'
-import { useFarmStore } from '../stores/farm'
+import { useGlobalStore } from '@/stores/global'
+import { useFarmStore } from '@/stores/farm'
 import IconFont from '@/components/IconFont.vue'
 
 const globalStore = useGlobalStore()
 const farmStore = useFarmStore()
 
-const notice = ref('【公告】欢迎来到纯文字农场，每日签到世界树可获得经验和灵石，集市任务奖励丰厚哦')
+const notice = ref('【公告】欢迎来到纯文字农场，每日签到世界树可获得丰富奖励，集市任务奖励丰厚哦')
 const NOTICE_DATE_KEY = 'farm_notice_shown_date'
 const showNoticePopup = ref(false)
 
@@ -1280,6 +1284,9 @@ onUnmounted(() => {
 
 .exp-text {
   margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .exp-bar-bg {

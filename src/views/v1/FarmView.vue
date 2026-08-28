@@ -25,6 +25,7 @@
         <div>
           <span class="text-gray500">经验</span>
           <span class="font-bold ml-4">{{ exp }}/{{ nextLevelExp }}</span>
+          <IconifyIcon :icon="globalStore.expIcon" width="14" />
         </div>
         <div class="exp-bar">
           <div class="exp-fill" :style="{ width: expProgress + '%' }"></div>
@@ -33,6 +34,7 @@
       <div class="status-item" v-for="walletAsset in walletAssets" :key="walletAsset.asset_id">
         <span class="text-gray500">{{ walletAsset.asset.name }}</span>
         <span class="font-bold ml-4">{{ walletAsset.balance }}</span>
+        <IconifyIcon v-if="walletAsset.asset_id === 1" :icon="globalStore.goldIcon" width="14" />
       </div>
     </div>
 
@@ -67,8 +69,10 @@
       <div class="market-tasks">
         <div v-for="item in marketList" :key="item.id" class="task-card">
           <div class="task-rewards">
-            <span class="reward-item exp">经验 +{{ item.farm_task.reward_exp }}</span>
-            <span class="reward-item gold">{{ item.farm_task.reward_gold }}</span>
+            <span class="reward-item exp">经验 +{{ item.farm_task.reward_exp }}
+              <IconifyIcon :icon="globalStore.expIcon" width="14" /></span>
+            <span class="reward-item gold">{{ item.farm_task.reward_gold }}
+              <IconifyIcon :icon="globalStore.goldIcon" width="14" /></span>
           </div>
           <div class="task-items">
             <div v-for="(status, idx) in getRequirementStatus(item)" :key="idx"
@@ -389,9 +393,9 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import router from '@/router'
-import { useGlobalStore } from '../stores/global'
-import { useFarmStore } from '../stores/farm'
-import { useUserStore } from '../stores/user'
+import { useGlobalStore } from '@/stores/global'
+import { useFarmStore } from '@/stores/farm'
+import { useUserStore } from '@/stores/user'
 import IconFont from '@/components/IconFont.vue'
 
 const globalStore = useGlobalStore()
@@ -2009,6 +2013,9 @@ onUnmounted(() => {
   font-size: 9px;
   padding: 2px 6px;
   border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
 }
 
 .reward-item.exp {
