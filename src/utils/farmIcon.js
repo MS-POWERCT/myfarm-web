@@ -1,4 +1,5 @@
 const ICON_BASE = `${import.meta.env.BASE_URL}images/farm/icons/`
+const NPC_BASE = `${import.meta.env.BASE_URL}images/farm/icons/npc/`
 
 const FILES = new Set([
   'apple', 'apple-pie', 'apple-slice',
@@ -110,10 +111,21 @@ const toSlug = (value) => {
   if (!value) return ''
   return String(value)
     .trim()
+    .replace(/^npc[/\\]/i, '')
     .replace(/^icon[-_]?/i, '')
     .replace(/\.svg$/i, '')
     .replace(/_/g, '-')
     .toLowerCase()
+}
+
+export const npcIconSrc = (npcOrIcon) => {
+  if (!npcOrIcon) return ''
+  const raw = typeof npcOrIcon === 'string'
+    ? npcOrIcon
+    : npcOrIcon.icon || npcOrIcon.slug || npcOrIcon.name_en || npcOrIcon.en_name
+  const slug = toSlug(raw)
+  if (!/^[a-z0-9-]+$/.test(slug)) return ''
+  return `${NPC_BASE}${slug}.svg`
 }
 
 export const farmIconSrc = (handbook) => {

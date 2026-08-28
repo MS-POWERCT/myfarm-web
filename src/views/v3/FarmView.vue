@@ -39,9 +39,11 @@
           :class="['order-ticket', { ready: checkTaskRequirements(item) }]"
           @click="tryDeliverTask(item)"
         >
+
           <div class="order-head">
             <button type="button" class="order-avatar" title="查看任务详情" @click.stop="openTaskDetail(item)">
-              <IconifyIcon icon="mdi:account-circle" width="28" />
+              <img v-if="npcFace(item)" :src="npcFace(item)" alt="" />
+              <IconifyIcon v-else icon="mdi:account-circle" width="28" />
             </button>
             <div class="order-payout">
               <b>{{ item.farm_task.reward_exp }}<IconifyIcon :icon="globalStore.expIcon" width="12" /></b>
@@ -86,7 +88,7 @@
             <FarmIcon v-if="land.status === 1 || land.status === 2" :handbook="land.handbook" :size="28" />
             <IconifyIcon v-else-if="land.status === 0" icon="meteocons:pollen-fill" width="26" />
             <IconifyIcon v-else-if="land.status === 3" icon="meteocons:pollen-grass" width="26" />
-            <IconifyIcon v-else-if="land.status === 9" icon="mdi:lock-outline" width="26" />
+            <IconifyIcon v-else-if="land.status === 9" icon="fxemoji:lock" width="26" />
           </div>
           <div class="plot-name">{{ landName(land, index) }}</div>
           <div v-if="landMeta(land)" class="plot-meta">{{ landMeta(land) }}</div>
@@ -330,7 +332,8 @@
       <div class="dialog task-detail">
         <div class="td-head">
           <div class="td-avatar">
-            <IconifyIcon icon="mdi:account-circle" width="42" />
+            <img v-if="npcFace(taskDetailItem)" :src="npcFace(taskDetailItem)" alt="" />
+            <IconifyIcon v-else icon="mdi:account-circle" width="42" />
           </div>
           <div class="td-title">
             <h3>{{ taskDetailName }}</h3>
@@ -421,6 +424,7 @@ import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useGlobalStore } from '@/stores/global'
 import { useFarmStore } from '@/stores/farm'
 import FarmIcon from '@/components/FarmIcon.vue'
+import { npcIconSrc } from '@/utils/farmIcon'
 
 const globalStore = useGlobalStore()
 const farmStore = useFarmStore()
@@ -897,8 +901,11 @@ const taskDetailName = computed(() => {
 
 const taskDetailNpc = computed(() => {
   const t = taskDetailItem.value?.farm_task
-  return t?.npc_name || t?.npc || ''
+  const npc = t?.npc
+  return t?.npc_name || npc?.name || npc?.title || ''
 })
+
+const npcFace = (item) => npcIconSrc(item?.farm_task?.npc)
 
 const taskDetailDesc = computed(() => {
   const t = taskDetailItem.value?.farm_task
@@ -1411,6 +1418,16 @@ onUnmounted(() => {
   cursor: pointer;
   border-radius: 50%;
   line-height: 0;
+  overflow: hidden;
+  width: 40px;
+  height: 40px;
+}
+
+.order-avatar img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  display: block;
 }
 
 .order-avatar:hover {
@@ -1969,6 +1986,13 @@ onUnmounted(() => {
   place-items: center;
   background: rgba(124, 179, 66, 0.16);
   color: #c5de9d;
+  overflow: hidden;
+}
+
+.td-avatar img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
 }
 
 .td-title h3 {
