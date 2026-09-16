@@ -342,7 +342,7 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  padding-top: calc(12px + env(safe-area-inset-top));
+  padding-top: calc(12px + var(--safe-top));
 }
 
 .nav-back,

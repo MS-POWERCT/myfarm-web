@@ -279,7 +279,7 @@ onMounted(() => {
 .settings-view {
   min-height: 100vh;
   padding: 6px;
-  padding-top: calc(6px + env(safe-area-inset-top));
+  padding-top: calc(6px + var(--safe-top));
   background: var(--black100);
   color: var(--white);
   font-family: 'Microsoft YaHei', sans-serif;

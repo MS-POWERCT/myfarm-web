@@ -1,7 +1,35 @@
 export const deviceType = getDeviceType()
+
+/** iOS 全屏 WebView 未上报 safe-area 时，补齐灵动岛 / 刘海高度 */
+export function applySafeAreaInsets() {
+  if (typeof document === 'undefined') return
+
+  const probe = document.createElement('div')
+  probe.style.cssText =
+    'position:fixed;visibility:hidden;pointer-events:none;padding-top:env(safe-area-inset-top, 0px)'
+  document.documentElement.appendChild(probe)
+  const reported = Number.parseFloat(getComputedStyle(probe).paddingTop) || 0
+  probe.remove()
+
+  const isIPhone = /iPhone/i.test(navigator.userAgent)
+  if (!isIPhone) return
+
+  const h = Math.max(window.screen.height, window.screen.width)
+  let fallback = 20
+  if (h >= 852) fallback = 59
+  else if (h >= 812) fallback = 47
+
+  document.documentElement.style.setProperty('--safe-top', `${Math.max(reported, fallback)}px`)
+  if (reported === 0) {
+    document.documentElement.style.setProperty('--safe-bottom', '34px')
+  }
+}
 export function getDeviceType() {
   const ua = navigator.userAgent.toLowerCase()
 
+  if (/taptap/.test(ua)) {
+    return 'taptap'
+  }
   if (/micromessenger/.test(ua)) {
     return 'wechat'
   }

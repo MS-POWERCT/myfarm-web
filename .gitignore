@@ -11,6 +11,8 @@ node_modules
 .DS_Store
 dist
 dist-ssr
+.taptap-h5
+文字农场.zip
 coverage
 *.local
 

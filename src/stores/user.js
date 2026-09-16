@@ -84,6 +84,16 @@ export const useUserStore = defineStore('user', {
         throw error
       }
     },
+    async taptapLogin(data) {
+      try {
+        const response = await userApi.taptapLogin(data)
+        this.setToken(response.access_token)
+        await this.getUserInfo()
+      } catch (error) {
+        console.error('taptapLogin failed', error)
+        throw error
+      }
+    },
     // 获取用户操作日志
     async getUserLog(){
       try {

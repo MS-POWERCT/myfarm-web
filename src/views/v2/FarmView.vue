@@ -1187,7 +1187,7 @@ onUnmounted(() => {
   min-height: 100vh;
   background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
   color: #fff;
-  padding-bottom: 20px;
+  padding-bottom: calc(20px + var(--safe-bottom));
   font-size: 13px;
 }
 
@@ -1197,7 +1197,7 @@ onUnmounted(() => {
 
 .top-header {
   padding: 12px 16px 10px;
-  padding-top: calc(12px + env(safe-area-inset-top));
+  padding-top: calc(12px + var(--safe-top));
 }
 
 .header-row {
@@ -1591,7 +1591,7 @@ onUnmounted(() => {
   /* 底部配送面板 */
   position: fixed;
   left: 10%;
-  bottom: 10px;
+  bottom: calc(10px + var(--safe-bottom));
   z-index: 100;
   display: flex;
   flex-direction: column;

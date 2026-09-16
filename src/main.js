@@ -9,6 +9,7 @@ import { useGlobalStore } from './stores/global'
 import 'vant/lib/index.css'
 import './assets/main.css'
 import { Icon } from '@iconify/vue'
+import { applySafeAreaInsets } from './utils/device'
 
 // 导入 IconFont 组件
 import IconFont from './components/IconFont.vue'
@@ -44,6 +45,7 @@ import {
 
 
 async function initApp() {
+  applySafeAreaInsets()
   const app = createApp(App)
   const pinia = createPinia()
   app.use(pinia)

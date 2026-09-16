@@ -6,6 +6,8 @@ import vue from '@vitejs/plugin-vue'
 
 // https://vite.dev/config/
 export default defineConfig({
+  // TapTap / 子路径托管需要相对资源路径，否则会白屏
+  base: './',
   plugins: [vue()],
   // plugins: [vue(), vueDevTools()],
   resolve: {

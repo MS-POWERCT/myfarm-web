@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TapTap 登录</title>
+</head>
+<body>
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search)
+      var hashParams = new URLSearchParams((window.location.hash || '').replace(/^#/, '').replace(/^[^?]*\?/, ''))
+      var code = params.get('code') || hashParams.get('code') || ''
+      var state = params.get('state') || hashParams.get('state') || ''
+      var error = params.get('error') || hashParams.get('error') || ''
+      var next = '#/login?taptap_code=' + encodeURIComponent(code)
+        + '&taptap_state=' + encodeURIComponent(state)
+        + '&taptap_error=' + encodeURIComponent(error)
+      window.location.replace(next)
+    })()
+  </script>
+</body>
+</html>

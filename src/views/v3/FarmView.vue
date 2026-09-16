@@ -1256,7 +1256,7 @@ onUnmounted(() => {
 .farm3 {
   min-height: 100vh;
   padding: 12px 14px 88px;
-  padding-top: calc(12px + env(safe-area-inset-top));
+  padding-top: calc(12px + var(--safe-top));
   color: #f3ead8;
   background:
     radial-gradient(1200px 500px at 20% -10%, rgba(124, 179, 66, 0.18), transparent 55%),
@@ -1756,7 +1756,7 @@ onUnmounted(() => {
   position: fixed;
   left: 12px;
   right: 12px;
-  bottom: calc(10px + env(safe-area-inset-bottom));
+  bottom: calc(10px + var(--safe-bottom));
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 4px;
@@ -2152,7 +2152,7 @@ onUnmounted(() => {
 .toasts {
   position: fixed;
   right: 12px;
-  bottom: calc(76px + env(safe-area-inset-bottom));
+  bottom: calc(76px + var(--safe-bottom));
   left: auto;
   top: auto;
   transform: none;

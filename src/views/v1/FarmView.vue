@@ -1194,6 +1194,7 @@ onUnmounted(() => {
   background-color: var(--black100);
   color: var(--white);
   padding: 6px;
+  padding-top: calc(6px + var(--safe-top));
   font-family: 'Microsoft YaHei', sans-serif;
   font-size: 12px;
 }

@@ -41,6 +41,13 @@ export const userApi = {
       data,
     })
   },
+  taptapLogin(data) {
+    return request({
+      url: '/api/auth/taptap/login',
+      method: 'post',
+      data,
+    })
+  },
   getUserInfo() {
     return request({
       url: '/api/my/getMyInfo',

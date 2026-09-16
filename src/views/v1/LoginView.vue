@@ -11,6 +11,8 @@
           @click="setLoginMode('email_password')">[邮箱登录]</span>
         <span class="mode-item" :class="{ active: loginMode === 'email_code' }"
           @click="setLoginMode('email_code')">[邮箱验证码]</span>
+        <span class="mode-item" :class="{ active: loginMode === 'taptap' }"
+          @click="setLoginMode('taptap')">[TapTap]</span>
         <span v-if="web3Support.supported" class="mode-item" :class="{ active: loginMode === 'web3' }"
           @click="setLoginMode('web3')">[Web3]</span>
       </div>
@@ -18,60 +20,23 @@
       <div class="form-area">
         <EmailCodeLogin v-if="loginMode === 'email_code'" @login-success="handleLoginSuccess" />
         <EmailPasswordLogin v-else-if="loginMode === 'email_password'" @login-success="handleLoginSuccess" />
-        <Web3Login v-else @login-success="handleLoginSuccess" />
+        <TapTapLogin v-else-if="loginMode === 'taptap'" @login-success="handleLoginSuccess" />
+        <Web3Login v-else-if="loginMode === 'web3'" @login-success="handleLoginSuccess" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
 import EmailCodeLogin from '@/components/login/EmailCodeLogin.vue'
 import EmailPasswordLogin from '@/components/login/EmailPasswordLogin.vue'
 import Web3Login from '@/components/login/Web3Login.vue'
-import { checkWeb3Support } from '@/utils/web3'
+import TapTapLogin from '@/components/login/TapTapLogin.vue'
 import { useGlobalStore } from '@/stores/global'
+import { useLoginModes } from '@/composables/useLoginModes'
 
-const LOGIN_MODE_STORAGE_KEY = 'self_youth_login_mode_v1'
-const loginMode = ref('email_code')
-const web3Support = checkWeb3Support()
-const router = useRouter()
+const { loginMode, web3Support, setLoginMode, handleLoginSuccess } = useLoginModes()
 const globalStore = useGlobalStore()
-
-const isValidLoginMode = (mode) =>
-  mode === 'email_code' || mode === 'email_password' || mode === 'web3'
-
-const readSavedLoginMode = () => {
-  try {
-    const raw = localStorage.getItem(LOGIN_MODE_STORAGE_KEY)
-    if (!raw) return 'email_code'
-    return isValidLoginMode(raw) ? raw : 'email_code'
-  } catch {
-    return 'email_code'
-  }
-}
-
-const persistLoginMode = (mode) => {
-  try {
-    localStorage.setItem(LOGIN_MODE_STORAGE_KEY, mode)
-  } catch {
-    // ignore
-  }
-}
-
-const setLoginMode = (mode) => {
-  loginMode.value = mode
-  persistLoginMode(mode)
-}
-
-const handleLoginSuccess = () => {
-  router.push('/')
-}
-
-onMounted(() => {
-  loginMode.value = readSavedLoginMode()
-})
 </script>
 
 <style scoped>
@@ -91,6 +56,7 @@ onMounted(() => {
   align-items: flex-start;
   justify-content: center;
   padding: 48px 12px 24px;
+  padding-top: calc(48px + var(--safe-top));
   background: var(--black100);
   color: var(--white);
   font-family: 'Microsoft YaHei', sans-serif;
@@ -124,6 +90,7 @@ onMounted(() => {
 .mode-row {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 16px;
 }
